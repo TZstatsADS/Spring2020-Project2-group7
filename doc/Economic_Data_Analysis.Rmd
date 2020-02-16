@@ -10,9 +10,225 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, include=FALSE}
 library(tidyverse)
 library(ggplot2)
+theme_set(theme_light())
 ```
 
 ```{r}
 load("../output/states.RData")
 load("../output/counties.RData")
+```
+
+```{r}
+states %>% group_by(Metric) %>% count()
+```
+
+```{r}
+top_states <- function(metric, year, lowest=FALSE, n=10) {
+  
+  df <- states %>%
+      filter(Metric==metric, Year==year)
+  
+  if (lowest) {
+    df %>%
+      arrange(Value) %>%
+      head(n) %>%
+      ggplot() +
+      geom_bar(aes(x=reorder(Name, Value), y=Value), stat="identity") +
+      labs(title=paste("Top States:", year, metric), x="State", y=metric)
+  } else {
+    df %>%
+      arrange(desc(Value)) %>%
+      head(n) %>%
+      ggplot() +
+      geom_bar(aes(x=reorder(Name, -Value), y=Value), stat="identity") +
+      labs(title=paste("Top States:", year, metric), x="State", y=metric)
+  }
+
+}
+
+top_states_change <- function(metric, start_year, end_year, lowest=FALSE, pct_change=FALSE, n=10) {
+  
+  df <- states %>%
+    filter(Metric==metric, Year %in% c(start_year, end_year)) %>%
+    pivot_wider(names_from=Year, values_from=Value)
+  
+  if (pct_change) {
+    df <- df %>% mutate(Value = (!!as.name(end_year) / !!as.name(start_year) - 1) * 100)
+    title <- paste("Top States: % change in", metric)
+    y_lab <- paste("% change in", metric)
+  } else {
+    df <- df %>% mutate(Value = !!as.name(end_year) - !!as.name(start_year))
+    title <- paste("Top States: Change in", metric)
+    y_lab <- paste("Change in", metric)
+  }
+
+  if (lowest) {
+    df %>%
+      arrange(Value) %>%
+      head(n) %>%
+      ggplot() +
+      geom_bar(aes(x=reorder(Name, Value), y=Value), stat="identity") +
+      labs(title=title, x="State", y=y_lab)
+  } else {
+    df %>%
+      arrange(desc(Value)) %>%
+      head(n) %>%
+      ggplot() +
+      geom_bar(aes(x=reorder(Name, -Value), y=Value), stat="identity") +
+      labs(title=title, x="State", y=y_lab)
+  }
+
+}
+
+top_counties <- function(metric, year, state=NULL, lowest=FALSE, n=10) {
+  
+  if (!is.null(state)) {
+    df <- counties %>% filter(State==state)
+  } else {
+    df <- counties
+  }
+  
+  df <- df %>%
+      filter(Metric==metric, Year==year)
+  
+  if (lowest) {
+    df %>%
+      arrange(Value) %>%
+      head(n) %>%
+      ggplot() +
+      geom_bar(aes(x=reorder(Name, Value), y=Value), stat="identity") +
+      labs(title=paste("Top Counties:", year, metric), x="County", y=metric)
+  } else {
+    df %>%
+      arrange(desc(Value)) %>%
+      head(n) %>%
+      ggplot() +
+      geom_bar(aes(x=reorder(Name, -Value), y=Value), stat="identity") +
+      labs(title=paste("Top Counties:", year, metric), x="County", y=metric)
+  }
+  
+}
+
+top_counties_change <- function(metric, start_year, end_year, state=NULL, lowest=FALSE, pct_change=FALSE, n=10) {
+  
+  if (!is.null(state)) {
+    df <- counties %>% filter(State==state)
+  } else {
+    df <- counties
+  }
+  
+  df <- df %>%
+    filter(Metric==metric, Year %in% c(start_year, end_year)) %>%
+    pivot_wider(names_from=Year, values_from=Value)
+  
+  if (pct_change) {
+    df <- df %>% mutate(Value = (!!as.name(end_year) / !!as.name(start_year) - 1) * 100)
+    title <- paste("Top Counties: % change in", metric)
+    y_lab <- paste("% change in", metric)
+  } else {
+    df <- df %>% mutate(Value = !!as.name(end_year) - !!as.name(start_year))
+    title <- paste("Top Counties: Change in", metric)
+    y_lab <- paste("Change in", metric)
+  }
+
+  if (lowest) {
+    df %>%
+      arrange(Value) %>%
+      head(n) %>%
+      ggplot() +
+      geom_bar(aes(x=reorder(Name, Value), y=Value), stat="identity") +
+      labs(title=title, x="County", y=y_lab)
+  } else {
+    df %>%
+      arrange(desc(Value)) %>%
+      head(n) %>%
+      ggplot() +
+      geom_bar(aes(x=reorder(Name, -Value), y=Value), stat="identity") +
+      labs(title=title, x="County", y=y_lab)
+  }
+
+}
+
+state_time_series_plot <- function(metric, state) {
+  
+  states %>%
+    filter(Metric==metric, State==state) %>%
+    ggplot(aes(x=Year, y=Value, group=1)) +
+    geom_line() +
+    geom_point() +
+    labs(title=paste(state, metric, "over time"), x="Year", y=metric)
+  
+}
+
+county_time_series_plot <- function(metric, fips) {
+  
+  counties %>%
+    filter(Metric==metric, FIPS==fips) %>%
+    ggplot(aes(x=Year, y=Value, group=1)) +
+    geom_line() +
+    geom_point() +
+    labs(title=paste(with(counties, Name[FIPS==fips])[1], metric, "over time"), x="Year", y=metric)
+  
+}
+
+county_scatter_plot <- function(metric1, metric2, year1, year2, fips) {
+  
+  counties %>%
+    filter(State==with(counties, State[FIPS==fips])[1], (Metric==metric1 & Year==year1)|(Metric==metric2 & Year==year2)) %>%
+    pivot_wider(names_from=c(Metric, Year), values_from=Value, names_sep=": ") %>%
+    ggplot() +
+    geom_point(aes(x=!!as.name(paste0(metric1, ": ", year1)), y=!!as.name(paste0(metric2, ": ", year2)))) +
+    geom_point(aes(x=with(counties, Value[FIPS==fips & Metric==metric1 & Year==year1])[1], y=with(counties, Value[FIPS==fips & Metric==metric2 & Year==year2])[1]), color="red", size=5) +
+    labs(title=paste(with(counties, Name[FIPS==fips])[1], "compared to other", with(counties, State[FIPS==fips])[1], "counties"))
+  
+}
+
+```
+
+```{r}
+metric <- "Unemployment Rate"
+year <- "2018"
+
+top_states(metric, year, lowest=TRUE)
+```
+```{r}
+metric <- "% of adults with a bachelor's degree or higher"
+start_year <- "2000"
+end_year <- "2014-18"
+
+top_states_change(metric, start_year, end_year)
+```
+
+```{r}
+metric <- "Median Household Income"
+year <- "2018"
+state <- "VA"
+
+top_counties(metric, year, state)
+```
+
+```{r}
+metric <- "Population"
+start_year <- "2013"
+end_year <- "2018"
+state <- "VA"
+
+top_counties_change(metric, start_year, end_year, state, pct_change=TRUE)
+```
+
+```{r}
+metric <- "Population"
+fips <- with(counties, FIPS[Name=="Loudoun County" & State=="VA"])[1]
+
+county_time_series_plot(metric, fips)
+```
+
+```{r}
+fips <- with(counties, FIPS[Name=="Loudoun County" & State=="VA"])[1]
+metric1 <- "Unemployment Rate"
+metric2 <- "% of people in poverty"
+year1 <- "2018"
+year2 <- "2018"
+
+county_scatter_plot(metric1, metric2, year1, year2, fips)
 ```
