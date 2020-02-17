@@ -1,42 +1,69 @@
-library(shiny)
-library(leaflet)
+# Header
+header <- dashboardHeader(title='Project_2 Group_7')
 
-# Define UI for application that draws a histogram
-shinyUI(fluidPage(
+
+# Sidebar
+sidebar <- dashboardSidebar(
+  sidebarMenu(
+    menuItem('Home', 
+             tabName='Home'
+            ), 
+    menuItem('Map', 
+             tabName='map'
+            )
+  )
+)
   
-  # Application title
-  titlePanel("2009 Manhattan Housing Sales"),
   
-  # Sidebar with a selector input for neighborhood
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("nbhd", label = h5("Choose a Manhattan Neighborhood"), 
-                         choices = list("all neighborhoods"=0,
-                                        "Central Harlem"=1, 
-                                        "Chelsea and Clinton"=2,
-                                        "East Harlem"=3, 
-                                        "Gramercy Park and Murray Hill"=4,
-                                        "Greenwich Village and Soho"=5, 
-                                        "Lower Manhattan"=6,
-                                        "Lower East Side"=7, 
-                                        "Upper East Side"=8, 
-                                        "Upper West Side"=9,
-                                        "Inwood and Washington Heights"=10), 
-                         selected = 0)
-      #sliderInput("p.range", label=h3("Price Range (in thousands of dollars)"),
-      #            min = 0, max = 20000, value = c(200, 10000))
+# Body 
+body <- dashboardBody(
+  tabItems(
+    # Home
+    tabItem(tabName='Home',
+              fluidRow(
+                box(width = 12, 
+                    title = "Proj Summary", 
+                    status = "primary"
+                    ),
+                box(width=12, 
+                    title="...", 
+                    status='primary')
+              )
     ),
-    # Show two panels
-    mainPanel(
-      #h4(textOutput("text")),
-      h3(code(textOutput("text1"))),
-      tabsetPanel(
-        # Panel 1 has three summary plots of sales. 
-        tabPanel("Sales summary", plotOutput("distPlot")), 
-        # Panel 2 has a map display of sales' distribution
-        tabPanel("Sales map", plotOutput("distPlot1"))),
-      leafletOutput("map", width = "80%", height = "400px")
-    )
- )
-))
+    # MAPS
+    tabItem(tabName = 'map', 
+            fluidRow(
+              box('The State Map', width=9, status='primary',
+                  leafletOutput('stmaps')
+                  ),
+              box(title = 'Select ', width =3, status='info',
+                  selectInput(inputId = 'basic_metric', 
+                              label = 'Metrics:',
+                              choices = c('Education', 'Population', 'Employment', 'Poverty'), 
+                              selected = 'Population'
+                              ),
+                  selectInput(inputId = 'metric', 
+                              label = ' ', 
+                              choices = 'Population'
+                              ),
+                  selectInput(inputId = 'year', 
+                              label = 'Year:', 
+                              choices = '', 
+                              selected = ' '
+                              )
+                  )
+            )#end FluidRow
+           )#end tabItem
+          )#end tabItems
+  )
 
+
+
+
+
+ui <- dashboardPage(
+  skin='green',
+  header=header,
+  sidebar=sidebar,
+  body=body
+)
