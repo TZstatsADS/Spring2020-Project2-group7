@@ -48,11 +48,12 @@ body <- dashboardBody(
                               ),
                   selectInput(inputId = 'year', 
                               label = 'Year:', 
-                              choices = '', 
-                              selected = ' '
+                              choices = '' 
                               )
                   )
-            )#end FluidRow
+            ),#end FluidRow
+            fluidRow(box('test', 
+                         tableOutput('test')))
            )#end tabItem
           )#end tabItems
   )
