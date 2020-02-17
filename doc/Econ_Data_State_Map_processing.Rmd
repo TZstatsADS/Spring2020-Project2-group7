@@ -1,0 +1,35 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+load("../output/states.RData")
+
+Econ_data_state <- states %>% 
+  spread(Metric, Value) %>% 
+  select(State, Name, Year, 
+         `% of adults completing some college`, 
+         `% of adults with a bachelor's degree or higher`, 
+         `% of adults with a high school diploma only`, 
+         `% of adults with less than a high school diploma`, 
+         Population, `Group Quarters total population`, `Change in population`, `Natural population increase`, `Natural population increase rate`,
+         Births, `Birth rate`, Deaths, `Death rate`, 
+         `Net domestic migration`, 
+         `Net domestic migration rate`, 
+         `Net international migration`, 
+         `Net international migration rate`,
+         `Net migration`, `Net migration rate`,
+         `Civilian Labor Force`, Employed, Unemployed,  `Unemployment Rate`, 
+         `Median Household Income`, 
+         `% of people age 0-17 in poverty`, 
+         `% of people age 0-4 in poverty`, 
+         `% of people age 5-17 in poverty`, 
+         `% of people in poverty`) %>% 
+  arrange(State, Name) %>% 
+  filter(Name!="Alaska" | Name!="Hawaii") %>% 
+  mutate(Name=gsub('Lousiana', 'Louisiana', Name))
+
+save(Econ_data_state, file='../output/Econ_state_map.RData')
+```
+
