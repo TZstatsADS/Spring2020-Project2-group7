@@ -27,7 +27,7 @@ Econ_data_state <- states %>%
          `% of people age 5-17 in poverty`, 
          `% of people in poverty`) %>% 
   arrange(State, Name) %>% 
-  filter(Name!="Alaska" | Name!="Hawaii") %>% 
+  filter(Name!="Alaska" & Name!="Hawaii") %>% 
   mutate(Name=gsub('Lousiana', 'Louisiana', Name))
 
 save(Econ_data_state, file='../output/Econ_state_map.RData')
