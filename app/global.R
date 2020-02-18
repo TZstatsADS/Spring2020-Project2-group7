@@ -19,19 +19,19 @@ state_map <- function(df){
   df <- df %>% 
     mutate(Name = str_to_upper(Name)) %>% 
     right_join(names)
-  value <- c(unlist(df[,3]))
-  pal <- colorBin("YlOrRd", domain = value, bins = 9)
+  values <- c(unlist(df[,3]))
+  pal <- colorBin("YlOrRd", domain = values, bins = 9)
   labels <- sprintf(
     "<strong>%s</strong><br/>%g",    #unit: people / mi<sup>2</sup>
-    df$Name,value) %>% 
+    df$Name,values) %>% 
     lapply(htmltools::HTML)
   
   # State Map
   leaflet(data = mapStates) %>% 
-    setView(-96, 37.8, 4) %>% 
+    setView(-96, 37.8, 4.3) %>% 
     addTiles() %>%
     addPolygons(
-      fillColor = pal(value),
+      fillColor = pal(values),
       weight = 2, 
       opacity = 1, 
       color='white',
@@ -51,7 +51,7 @@ state_map <- function(df){
         direction = "auto")
       ) %>%  
     addLegend(pal = pal,
-            values = df$values,
+            values = values,
             opacity = 0.85,
             title = NULL,
             position = "bottomright")
