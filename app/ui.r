@@ -19,6 +19,9 @@ sidebar <- dashboardSidebar(
   
 # Body 
 body <- dashboardBody(
+  tags$head(
+    tags$style(".selectize-dropdown {position: static}")
+  ),
   tabItems(
     # Home
     tabItem(tabName='Home',
@@ -35,30 +38,25 @@ body <- dashboardBody(
     # MAPS
     tabItem(tabName = 'map', 
             fluidRow(
+              box('The State Map', width=9, status='primary',
+                  leafletOutput('stmaps', height=750)
+                  ),
               box(width = 3, status='info',
                   selectInput(inputId = 'basic_metric', 
                               label = 'Metrics',
                               choices = c('Education', 'Population', 'Employment', 'Poverty'), 
                               selected = 'Population'
-                              )
-                  ),
-              box(width = 3, status='info',
+                              ),
                   selectInput(inputId = 'metric', 
                               label = 'Sub-Metrics', 
                               choices = 'Population'
-                              )
-                  ),
-              box(width = 3, status='info',
+                              ), 
                   selectInput(inputId = 'year', 
                               label = 'Year', 
                               choices = '' 
                               )
                   )
-            ),#end FluidRow
-            fluidRow(
-              box('The State Map', width=12, status='primary',
-                  leafletOutput('stmaps', height=600)
-              )
+                  
             )#end FluidRow
            )#end tabItem
           )#end tabItems
