@@ -33,27 +33,29 @@ body <- dashboardBody(
     # MAPS
     tabItem(tabName = 'map', 
             fluidRow(
-              box('The State Map', width=9, status='primary',
-                  leafletOutput('stmaps')
-                  ),
-              box(title = 'Select ', width =3, status='info',
+              box(width = 4, status='info',
                   selectInput(inputId = 'basic_metric', 
-                              label = 'Metrics:',
+                              label = 'Metrics',
                               choices = c('Education', 'Population', 'Employment', 'Poverty'), 
                               selected = 'Population'
-                              ),
+                  )),
+              box(width =4, status='info',
                   selectInput(inputId = 'metric', 
-                              label = ' ', 
+                              label = 'Sub-Metrics', 
                               choices = 'Population'
-                              ),
+                  )),
+              box(width = 4, status='info',
                   selectInput(inputId = 'year', 
-                              label = 'Year:', 
+                              label = 'Year', 
                               choices = '' 
-                              )
                   )
+            )
             ),#end FluidRow
-            fluidRow(box('test', 
-                         tableOutput('test')))
+            fluidRow(
+              box('The State Map', width=12, status='primary',
+                  leafletOutput('stmaps', height=600)
+              )
+            )#end FluidRow
            )#end tabItem
           )#end tabItems
   )
