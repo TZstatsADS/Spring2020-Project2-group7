@@ -8,7 +8,6 @@ library(RColorBrewer)
 library(htmltools)
 
 load("../output/Econ_state_map.RData")
-Econ_data_state <- Econ_data_state %>% mutate(Year = as.numeric(Year))
 
 mapStates = maps::map("state", fill = TRUE, plot = FALSE)
 names <- tibble(Name=str_to_upper(mapStates$names)) %>% 
