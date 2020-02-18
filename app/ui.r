@@ -6,10 +6,12 @@ header <- dashboardHeader(title='Project_2 Group_7')
 sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem('Home', 
-             tabName='Home'
+             tabName='Home', 
+             icon = icon('home')
             ), 
     menuItem('Map', 
-             tabName='map'
+             tabName='map', 
+             icon = icon("map")
             )
   )
 )
@@ -33,23 +35,25 @@ body <- dashboardBody(
     # MAPS
     tabItem(tabName = 'map', 
             fluidRow(
-              box(width = 4, status='info',
+              box(width = 3, status='info',
                   selectInput(inputId = 'basic_metric', 
                               label = 'Metrics',
                               choices = c('Education', 'Population', 'Employment', 'Poverty'), 
                               selected = 'Population'
-                  )),
-              box(width =4, status='info',
+                              )
+                  ),
+              box(width = 3, status='info',
                   selectInput(inputId = 'metric', 
                               label = 'Sub-Metrics', 
                               choices = 'Population'
-                  )),
-              box(width = 4, status='info',
+                              )
+                  ),
+              box(width = 3, status='info',
                   selectInput(inputId = 'year', 
                               label = 'Year', 
                               choices = '' 
+                              )
                   )
-            )
             ),#end FluidRow
             fluidRow(
               box('The State Map', width=12, status='primary',
