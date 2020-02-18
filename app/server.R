@@ -40,7 +40,7 @@ serever <- function(input, output, session){
       filter(Year==input$year)
   })
   output$stmaps <- renderLeaflet(state_map(data_select()))
-  output$test <- renderTable(metric_select() %>% select(Year) %>% unique())
+  
   
   
   
