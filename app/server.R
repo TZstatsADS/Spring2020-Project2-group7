@@ -17,7 +17,7 @@ serever <- function(input, output, session){
       select(-Name, -Year) %>%  
       colnames()
     
-    updateSelectInput(session, 'metric', choices=choice)
+    updateSelectInput(session, 'metric', choices=c(choice))
   })
   
   # By Metric
@@ -28,10 +28,9 @@ serever <- function(input, output, session){
   })
   
   observeEvent(input$metric, {
-    choice <- metric_select() %>%
-      select(Year) %>%
-      unique()
-    updateSelectInput(session, 'year', choices=choice)
+    year <- metric_select()$Year
+    
+    updateSelectInput(session, 'year', choices=unique(year))
   })
   
   # By Year
@@ -39,11 +38,8 @@ serever <- function(input, output, session){
     metric_select() %>% 
       filter(Year==input$year)
   })
+  
   output$stmaps <- renderLeaflet(state_map(data_select()))
-  
-  
-  
-  
 }
 
 
