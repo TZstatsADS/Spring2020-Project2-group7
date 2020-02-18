@@ -22,7 +22,7 @@ state_map <- function(df){
   values <- c(unlist(df[,3]))
   pal <- colorBin("YlOrRd", domain = values, bins = 9)
   labels <- sprintf(
-    "<strong>%s</strong><br/>%g",    #unit: people / mi<sup>2</sup>
+    "<strong>%s</strong><br/>%g",    
     df$Name,values) %>% 
     lapply(htmltools::HTML)
   
