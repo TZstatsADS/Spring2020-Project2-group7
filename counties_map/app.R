@@ -7,8 +7,9 @@ library(maptools)
 library(usmap)
 
 load("../output/counties.RData")
+counties = counties %>% filter(State != "PR")
 state_choise = counties$State %>% unique()
-
+state_name = c(state.name[1:8], 'District of Columbiain', state.name[9:50])
 
 
 ui <- dashboardPage(
@@ -27,13 +28,13 @@ ui <- dashboardPage(
             # First tab content
             tabItem(tabName = "map",
                 div(
-                    absolutePanel(id = "control", class = "panel panel-default", fixed = TRUE, draggable = FALSE,
+                    absolutePanel(id = "control", class = "panel panel-default", fixed = TRUE, draggable = TRUE,
                                   top = 50, left = "auto", right = 10, bottom = "auto", width = 250, height = "auto",
                         title = "Select",
                         selectInput(inputId = "state", 
                                     label = "Choose your state", 
-                                    choices = state_choise,
-                                    selected = state_choise[1]),
+                                    choices = state_name,
+                                    selected = state_name[1]),
                         uiOutput("state_metric"),
                         uiOutput("state_year")
                     ),
@@ -55,8 +56,10 @@ ui <- dashboardPage(
 )
 
 server <- function(input, output) {
-    value = reactive({counties %>%
-        filter(State == input$state) %>%
+    value = reactive({
+      input.state = state_choise[which(input$state == state_name)]
+      counties %>%
+        filter(State == input.state) %>%
         filter(Metric == input$state_metric) %>%
         filter(Year %in% c(input$state_year)) %>%
         group_by(FIPS, Name) %>%
@@ -79,28 +82,30 @@ server <- function(input, output) {
     })
   
     output$state_metric <- renderUI({
+        input.state = state_choise[which(input$state == state_name)]
         metric = with(counties %>% 
-                        filter(State == input$state) %>% 
+                        filter(State == input.state) %>% 
                         arrange(Metric), 
                       unique(Metric))
       
         selectInput(inputId = "state_metric", 
                     label = paste0("Choose your metrics in ", 
-                                   state.name[which(state.abb == input$state)]), 
+                                   input$state), 
                     choices = metric,
                     selected = metric[1])
     })
   
     output$state_year <- renderUI({
+        input.state = state_choise[which(input$state == state_name)]
         year = with(counties %>% 
-                      filter(State == input$state) %>% 
+                      filter(State == input.state) %>% 
                       filter(Metric == input$state_metric) %>%
                       arrange(Year), 
                     unique(Year))
       
         selectInput(inputId = "state_year", 
                     label = paste0("Choose your year in ", 
-                                   state.name[which(state.abb == input$state)], 
+                                   input$state, 
                                    " on ", 
                                    input$state_metric), 
                     choices = year,
@@ -110,10 +115,10 @@ server <- function(input, output) {
   
     output$map <- renderPlot({
         value = value()  
-      
+        input.state = state_choise[which(input$state == state_name)]
         plot_usmap(data = value,
                    regions = "counties",
-                   include = input$state,
+                   include = input.state,
                    values = "value",
                    color = "white",
                    labels = TRUE) +
@@ -128,7 +133,7 @@ server <- function(input, output) {
     })
     
     output$info <- renderText({
-      
+      input.state = state_choise[which(input$state == state_name)]
       get_text <- function(click) {
         if(is.null(click)) return("Choose a county by clicking!\n")
         value = value()  
@@ -136,7 +141,7 @@ server <- function(input, output) {
         y0 = click$y
         
         coord = us_map(regions = 'county') %>%
-          filter(abbr == input$state)
+          filter(abbr == input.state)
         dist = coord %>% 
           
           mutate(Dist = sqrt((x-x0)^2+(y-y0)^2)) %>% 
@@ -153,7 +158,7 @@ server <- function(input, output) {
           text = paste0(text, 'average ')
         }
         text = paste0(text, input$state_metric,
-                      ' of ', county, 'in ')
+                      ' of ', county, ' in ')
         if(len == 1){
           text = paste0(text, sort_year[1], ' ')
         }
@@ -170,7 +175,8 @@ server <- function(input, output) {
           }
           text = paste0(text, 'and ', sort_year[len], ' ')
         }
-        text = paste0(text, 'is ', with(value%>%filter(name == county), value))
+        text = paste0(text, 'is ', with(value%>%filter(name == county), 
+                                        value) %>% signif(5))
         
         index = 0
         for(i in 1:nchar(text)){
