@@ -40,7 +40,12 @@ ui <- dashboardPage(
               
 
                     title = "Map",
-                    plotOutput("map", height = 750, click = "state_map_click"),
+                    plotOutput("map", height = 750, 
+                               click = "state_map_click", 
+                               dblclick = "state_map_dblclick",
+                               brush = brushOpts(
+                                 id = "state_map_brush",
+                                 resetOnNew = TRUE)),
                     verbatimTextOutput("info")
 
                 )
@@ -58,6 +63,20 @@ server <- function(input, output) {
         summarize(value = mean(Value)) %>%
         select(fips = FIPS, value = value, name = Name)
     })  
+    
+    ranges <- reactiveValues(x = NULL, y = NULL)
+    
+    observeEvent(input$state_map_dblclick, {
+      brush <- input$state_map_brush
+      if (!is.null(brush)) {
+        ranges$x <- c(brush$xmin, brush$xmax)
+        ranges$y <- c(brush$ymin, brush$ymax)
+        
+      } else {
+        ranges$x <- NULL
+        ranges$y <- NULL
+      }
+    })
   
     output$state_metric <- renderUI({
         metric = with(counties %>% 
@@ -102,6 +121,7 @@ server <- function(input, output) {
                                 label = scales::comma, 
                                 low = "white", 
                                 high = "blue") +
+          coord_cartesian(xlim = ranges$x, ylim = ranges$y, expand = FALSE) + 
           theme(legend.position = "right")
 
 
@@ -114,13 +134,16 @@ server <- function(input, output) {
         value = value()  
         x0 = click$x
         y0 = click$y
+        
         coord = us_map(regions = 'county') %>%
           filter(abbr == input$state)
         dist = coord %>% 
+          
           mutate(Dist = sqrt((x-x0)^2+(y-y0)^2)) %>% 
           group_by(county) %>% 
           summarize(dist = mean(Dist)) %>% 
           arrange(dist)
+        
         county = dist[1,1]
         len = length(input$state_year)
         sort_year = input$state_year %>% sort()
