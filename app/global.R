@@ -6,6 +6,8 @@ library(maps)
 library(tidyverse)
 library(RColorBrewer)
 library(htmltools)
+library(leaflet.extras)
+library(magrittr)
 
 load("../output/Econ_state_map.RData")
 
@@ -29,6 +31,7 @@ state_map <- function(df){
   leaflet(data = mapStates) %>% 
     setView(-96, 37.8, 4.3) %>% 
     addTiles() %>%
+    addResetMapButton() %>% 
     addPolygons(
       fillColor = pal(values),
       weight = 2, 
