@@ -28,8 +28,11 @@ sidebar <- dashboardSidebar(
              ),
              menuSubItem('By County', 
                          tabName = 'county_stats'
-             )
-    )
+             ) 
+    ), 
+    menuItem('Reference', 
+             tabName = 'ref', 
+             icon = icon('alipay'))
   )
 )
   
@@ -41,9 +44,9 @@ body <- dashboardBody(
     tabItem(tabName='Home',
             fluidRow(
               tabBox(title='', id='home_tabs', width = 12,
-                     tabPanel(h3('Introduction') ,
+                     tabPanel(h4('Project Description') ,
                               'This is a summary'),
-                     tabPanel(h3('User Guide'), 
+                     tabPanel(h4('User Guide'), 
                               'Here is the user guide')
                 )
               #box(width=12, DT::dataTableOutput('test'))
@@ -81,9 +84,12 @@ body <- dashboardBody(
     tabItem(tabName = 'state_stats',
             "code of stats by states"
            ),
+    # Counties
     tabItem(tabName = 'county_stats',
             "code of stats by counties"
-            )
+            ), 
+    tabItem(tabName = 'ref', 
+            'Here shows the references')
   )
 )
 
