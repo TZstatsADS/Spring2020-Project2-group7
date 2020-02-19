@@ -20,7 +20,7 @@ sidebar <- dashboardSidebar(
                          )
              
     ),
-    menuItem('Statss', 
+    menuItem('Stats', 
              tabName = 'map', 
              icon = icon("chart-line"), 
              menuSubItem('By State', 
@@ -82,7 +82,7 @@ body <- dashboardBody(
             "code of stats by states"
            ),
     tabItem(tabName = 'county_stats',
-            "code of stats by states"
+            "code of stats by counties"
             )
   )
 )
