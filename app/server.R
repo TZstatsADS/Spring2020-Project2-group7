@@ -40,6 +40,12 @@ serever <- function(input, output, session){
   })
   
   output$stmaps <- renderLeaflet(state_map(data_select()))
+  
+  
+  # #test
+  # output$test <- DT::renderDataTable({
+  #   metric_select()
+  # })
 }
 
 
