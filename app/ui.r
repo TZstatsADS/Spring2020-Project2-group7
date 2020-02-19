@@ -6,41 +6,56 @@ header <- dashboardHeader(title='Project_2 Group_7')
 sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem('Home', 
-             tabName='Home', 
+             tabName = 'Home', 
              icon = icon('home')
-            ), 
-    menuItem('Map', 
+    ), 
+    menuItem('Maps', 
              tabName='map', 
-             icon = icon("map")
-            )
+             icon = icon("map"), 
+             menuSubItem('State Map', 
+                         tabName = 'state_map'
+                         ),
+             menuSubItem('County Map', 
+                         tabName = 'county_map'
+                         )
+             
+    ),
+    menuItem('Statss', 
+             tabName = 'map', 
+             icon = icon("chart-line"), 
+             menuSubItem('By State', 
+                         tabName = 'state_stats'
+             ),
+             menuSubItem('By County', 
+                         tabName = 'county_stats'
+             )
+    )
   )
 )
   
   
 # Body 
 body <- dashboardBody(
-  tags$head(
-    tags$style(".selectize-dropdown {position: static}")
-  ),
   tabItems(
     # Home
     tabItem(tabName='Home',
-              fluidRow(
-                box(width = 12, 
-                    title = "Proj Summary", 
-                    status = "primary"
-                    ),
-                box(width=12, 
-                    title="...", 
-                    status='primary')
+            fluidRow(
+              tabBox(title='', id='home_tabs', width = 12,
+                     tabPanel(h3('Introduction') ,
+                              'This is a summary'),
+                     tabPanel(h3('User Guide'), 
+                              'Here is the user guide')
+                )
+              #box(width=12, DT::dataTableOutput('test'))
               )
-    ),
-    # MAPS
-    tabItem(tabName = 'map', 
+                     
+      ),
+    # States MAPS
+    tabItem(tabName = 'state_map', 
             fluidRow(
               box('The State Map', width=9, status='primary',
-                  leafletOutput('stmaps', height=750)
-                  ),
+                  leafletOutput('stmaps', height=700)
+              ),
               box(width = 3, status='info',
                   selectInput(inputId = 'basic_metric', 
                               label = 'Metrics',
@@ -55,12 +70,22 @@ body <- dashboardBody(
                               label = 'Year', 
                               choices = '' 
                               )
-                  )
-                  
-            )#end FluidRow
-           )#end tabItem
-          )#end tabItems
+                )
+            )
+    ),
+    # County Maps
+    tabItem(tabName = 'county_map',
+            "code of county map"
+            ),
+    # State Statd
+    tabItem(tabName = 'state_stats',
+            "code of stats by states"
+           ),
+    tabItem(tabName = 'county_stats',
+            "code of stats by states"
+            )
   )
+)
 
 
 
