@@ -57,7 +57,7 @@ body <- dashboardBody(
     tabItem(tabName = 'state_map', 
             fluidRow(
               box('The State Map', width=9, status='primary',
-                  leafletOutput('stmaps', height=700)
+                  leafletOutput('stmaps', height=750)
               ),
               box(width = 3, status='info',
                   selectInput(inputId = 'basic_metric', 
