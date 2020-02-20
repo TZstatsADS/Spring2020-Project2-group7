@@ -48,8 +48,8 @@ body <- dashboardBody(
                               'This is a summary'),
                      tabPanel(h4('User Guide'), 
                               'Here is the user guide')
-                )
-              #box(width=12, DT::dataTableOutput('test'))
+                ),
+              box(width=12, DT::dataTableOutput('test'))
               )
                      
       ),
@@ -57,23 +57,29 @@ body <- dashboardBody(
     tabItem(tabName = 'state_map', 
             fluidRow(
               box('The State Map', width=9, status='primary',
-                  leafletOutput('stmaps', height=750)
+                  leafletOutput('stmaps', height=700)
               ),
-              box(width = 3, status='info',
+              box(status='info', width=3,
+                  radioButtons('chs', label = 'Please Choose:', 
+                               choices = c('Snapshot', 'Changes by time', '%Change by time'), 
+                               selected = 'Snapshot'
+                  ),
                   selectInput(inputId = 'basic_metric', 
                               label = 'Metrics',
                               choices = c('Education', 'Population', 'Employment', 'Poverty'), 
                               selected = 'Population'
-                              ),
+                  ),
                   selectInput(inputId = 'metric', 
                               label = 'Sub-Metrics', 
                               choices = 'Population'
-                              ), 
+                  ), 
                   selectInput(inputId = 'year', 
                               label = 'Year', 
-                              choices = '' 
-                              )
-                )
+                              choices = '2010', 
+                              selected = '2010'
+                  ), 
+                  uiOutput('if_end')
+              )
             )
     ),
     # County Maps
