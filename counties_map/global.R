@@ -11,9 +11,10 @@ library(magrittr)
 
 load("../output/Econ_county_map.RData")
 zoom = rep(7, length(state.abb))
-zoom[c(5,12,22,23,28,43)] = 6
+zoom[c(5,12,23,28,43)] = 6
 zoom[c(20,21,29,30,38,40,45,48)] = 8
-zoom[c(7,8,39)] = 9
+zoom[c(7,8)] = 9
+zoom[c(39)] = 10
 
 county_map <- function(df){
   mapcounty <- maps::map("county", regions = state.name[which(state.abb == df$State[1])], fill = TRUE, plot = FALSE)
