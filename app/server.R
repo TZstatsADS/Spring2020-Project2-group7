@@ -1,24 +1,6 @@
 
 serever <- function(input, output, session){
 # State Map
-  
-  end_year <- reactive({
-    if(input$chs!='Snapshot' & input$basic_metric!='Poverty'){
-      selectInput(inputId = 'end_year',
-                  label = 'End Year',
-                  choices = '2011')
-    }
-  })
-  
-  output$if_end <- renderUI(end_year())
-  observeEvent(input$chs, {
-    if(input$chs!='Snapshot' & input$basic_metric!='Poverty'){
-      updateSelectInput(session, 'year', label = 'Start Year')
-    }
-    else updateSelectInput(session, 'year', label = 'Year')
-  })
-  
-  
   # By Basic Metric
   basic_metric_select <- reactive({
     sel <- if(input$basic_metric=='Education') colnames(Econ_data_state)[4:7]
@@ -30,65 +12,111 @@ serever <- function(input, output, session){
       select(Name, Year, sel)
   })
   
+  # choose the type —— change UI
+  end_year <- reactive({
+    if(input$chs!='Snapshot'){
+      selectInput(inputId = 'end_year',
+                  label = 'End Year',
+                  choices = c('2011', '2012', '2013', '2014', 
+                              '2015', '2016', '2017', '2018')
+      )
+    }
+  })
+  
+  output$if_end <- renderUI(end_year())
+  
+  observeEvent(list(input$chs), {
+    if(input$chs!='Snapshot'){
+      updateSelectInput(session, 
+                        'basic_metric', 
+                        choices = c('Education', 'Population', 'Employment'), 
+                        selected = 'Population'
+                        )
+      updateSelectInput(session, 'year', label = 'Start Year')
+    }
+    else{
+      updateSelectInput(session, 
+                        'basic_metric', 
+                        choices = c('Education', 'Population', 'Employment', 'Poverty'), 
+                        selected = 'Population'
+                        )
+      
+      updateSelectInput(session, 'year')
+    }
+  })
+  #
+  
+  # The Basic Metric Changes --> The Selected Metric Change
   observeEvent(input$basic_metric, {
     choice <- basic_metric_select() %>% 
       select(-Name, -Year) %>%  
       colnames()
-    
     updateSelectInput(session, 'metric', choices=c(choice))
   })
+  #
   
-  # By Metric
+  # The Metric Changes --> The Selected Years Change 
+  ##   data selected by metric
   metric_select <- reactive({
     Econ_data_state %>% 
       select(Name, Year, input$metric) %>%
       drop_na()
   })
   
-  observeEvent(input$metric, {
-    year <- metric_select()$Year
-    updateSelectInput(session, 'year', choices=unique(year))
-    
+  ## Years changes
+  observeEvent(list(input$chs, input$basic_metric, input$metric), {
+    year <- metric_select()$Year %>% unique()
+    updateSelectInput(session, 
+                      'year', 
+                      choices = year, 
+                      selected = year[1])
     if(input$chs!='Snapshot'){
-      updateSelectInput(session, 'end_year', label = 'End Year', choices=unique(year)[-1])
+      id <- match(input$year, year)
+      updateSelectInput(session, 
+                        'end_year', 
+                        choices = year[-1], 
+                        selected = year[-1][1])
     }
-    
-    
+  })
+  #
+  
+  # Start Year changes --> End Year changes
+  observeEvent(input$year, {
+    if(input$chs!='Snapshot'){
+      year <- metric_select()$Year %>% unique()
+      id <- match(input$year, year)
+      choices <- year[-c(1:id)]
+      updateSelectInput(session, 
+                        'end_year', 
+                        choices = choices, 
+                        selected = choices[1])
+    }
   })
   
-  # By Year
+  # Get the df of map
   data_select <- reactive({
-    if(input$chs=='Changes by time' & input$basic_metric!='Poverty'){
-      dt <- metric_select() %>%
+    if(input$chs!='Snapshot'){
+      dt <- 
+        metric_select() %>%
         filter(Year==input$year | Year==input$end_year)
       Value <- dt[, 3]
       colnames(Value) <-'Value'
-      
-      dt <- dt %>%
+      dt <- 
+        dt %>%
         cbind(Value) %>%
         select(Name, Year, Value) %>%
         pivot_wider(names_from = 'Year', values_from = 'Value')
-      dt$Value <- dt[,3]-dt[,2]
-      dt %>%
-        select(Name, Value) %>% 
-        right_join(names)
-      
-    }
-    else if(input$chs=='%Change by time' & input$basic_metric!='Poverty') {
-      dt <- metric_select() %>%
-        filter(Year==input$year | Year==input$end_year)
-      Value <- dt[, 3]
+      if(input$chs=='Changes by time'){
+        Value <- dt[, 3] - dt[, 2]
+      }
+      else {
+        Value <- (dt[, 3]-dt[, 2])/dt[, 2]
+      }
       colnames(Value) <-'Value'
-      
-      dt <- dt %>%
-        cbind(Value) %>%
-        select(Name, Year, Value) %>%
-        pivot_wider(names_from = 'Year', values_from = 'Value')
-      dt$Value <- (dt[,3]-dt[,2])/dt[,3]
       dt %>%
-        select(Name, Value) %>% 
-        right_join(names)
-      
+        cbind(Value) %>%
+        select(Name, Value) %>%
+        right_join(names, by = "Name")
     }
     else{
       dt <- metric_select() %>%
@@ -97,62 +125,30 @@ serever <- function(input, output, session){
       colnames(Value) <-'Value'
       dt %>%
         cbind(Value) %>%
-        select(Name, Value) %>% 
-        right_join(names)
+        select(Name, Value) %>%
+        right_join(names, by = "Name")
     }
+    
   })
-  values <- reactive({
-    c(unlist(data_select() %>% select(Value)))
-  })
-  output$stmaps <- renderLeaflet(state_map(data_select(), values()))
-  
-  
+
+  output$stmaps <- renderLeaflet(state_map(data_select(), input$metric))
   
   
   #test
-  output$test <- DT::renderDataTable({
-    if(input$chs=='Changes by time' & input$basic_metric!='Poverty'){
-      dt <- metric_select() %>%
-        filter(Year==input$year | Year==input$end_year)
-      Value <- dt[, 3]
-      colnames(Value) <-'Value'
-
-      dt <- dt %>%
-        cbind(Value) %>%
-        select(Name, Year, Value) %>%
-        pivot_wider(names_from = 'Year', values_from = 'Value')
-      dt$Value <- dt[,3]-dt[,2]
-      dt %>%
-        select(Name, Value) %>% 
-        right_join(names)
-
+  output$test <- renderPrint({
+    if(input$chs!='Snapshot'){
+    # dt <-
+    #   metric_select() %>%
+    #   filter(Year==input$year | Year==input$end_year)
+    # Value <- dt[, 3]
+    # colnames(Value) <-'Value'
+    # Value
+    # dt <- dt %>%
+    #   cbind(Value) %>%
+    #   select(Name, Year, Value) %>%
+    #   pivot_wider(names_from = 'Year', values_from = 'Value')
     }
-    else if(input$chs=='%Change by time' & input$basic_metric!='Poverty') {
-      dt <- metric_select() %>%
-        filter(Year==input$year | Year==input$end_year)
-      Value <- dt[, 3]
-      colnames(Value) <-'Value'
-
-      dt <- dt %>%
-        cbind(Value) %>%
-        select(Name, Year, Value) %>%
-        pivot_wider(names_from = 'Year', values_from = 'Value')
-      dt$Value <- (dt[,3]-dt[,2])/dt[,3]
-      dt %>%
-        select(Name, Value) %>% 
-        right_join(names)
-
-    }
-    else{
-      dt <- metric_select() %>%
-        filter(Year==input$year)
-      Value <- dt[, 3]
-      colnames(Value) <-'Value'
-      dt %>%
-        cbind(Value) %>%
-        select(Name, Value) %>% 
-        right_join(names)
-    }
+   #metric_select()
   })
 }
 

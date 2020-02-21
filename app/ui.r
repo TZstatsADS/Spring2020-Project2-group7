@@ -49,7 +49,7 @@ body <- dashboardBody(
                      tabPanel(h4('User Guide'), 
                               'Here is the user guide')
                 ),
-              box(width=12, DT::dataTableOutput('test'))
+              box(width=12, verbatimTextOutput('test'))
               )
                      
       ),
@@ -75,8 +75,8 @@ body <- dashboardBody(
                   ), 
                   selectInput(inputId = 'year', 
                               label = 'Year', 
-                              choices = '2010', 
-                              selected = '2010'
+                              choices = c('2010', '2011', '2012', '2013', '2014', 
+                                          '2015', '2016', '2017', '2018')
                   ), 
                   uiOutput('if_end')
               )
