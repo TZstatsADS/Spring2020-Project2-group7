@@ -70,3 +70,5 @@ county_map <- function(df){
             title = NULL,
             position = "bottomright")
 }
+
+

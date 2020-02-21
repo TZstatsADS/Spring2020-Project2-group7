@@ -20,13 +20,13 @@ sidebar <- dashboardSidebar(
                          )
              
     ),
-    menuItem('Stats', 
+    menuItem('Stat', 
              tabName = 'map', 
              icon = icon("chart-line"), 
-             menuSubItem('By State', 
+             menuSubItem('Comparison', 
                          tabName = 'state_stats'
              ),
-             menuSubItem('By County', 
+             menuSubItem('Sepecific', 
                          tabName = 'county_stats'
              ) 
     ), 
