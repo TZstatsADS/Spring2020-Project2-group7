@@ -75,7 +75,8 @@ body <- dashboardBody(
                   ), 
                   selectInput(inputId = 'year', 
                               label = 'Year', 
-                              choices = c(2010:2018)
+                              choices = c('2010', '2011', '2012', '2013', '2014', 
+                                          '2015', '2016', '2017', '2018')
                   ), 
                   uiOutput('if_end')
               )
