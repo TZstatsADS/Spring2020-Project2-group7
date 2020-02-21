@@ -2,11 +2,12 @@
 serever <- function(input, output, session){
 # State Map
   # By Basic Metric
+  
   basic_metric_select <- reactive({
-    sel <- if(input$basic_metric=='Education') colnames(Econ_data_state)[4:7]
-           else if(input$basic_metric=='Population') colnames(Econ_data_state)[8:22]
-           else if(input$basic_metric=='Employment') colnames(Econ_data_state)[23:26]
-           else if(input$basic_metric=='Poverty') colnames(Econ_data_state)[27:31]
+    sel <- if(input$basic_metric=='Education') colnames(Econ_data_state)[4:5]
+           else if(input$basic_metric=='Population') colnames(Econ_data_state)[7:13]
+           else if(input$basic_metric=='Employment') colnames(Econ_data_state)[15]
+           else if(input$basic_metric=='Poverty') colnames(Econ_data_state)[c(6, 14)]
     
     Econ_data_state %>% 
       select(Name, Year, sel)
@@ -29,7 +30,7 @@ serever <- function(input, output, session){
     if(input$chs!='Snapshot'){
       updateSelectInput(session, 
                         'basic_metric', 
-                        choices = c('Education', 'Population', 'Employment'), 
+                        choices = c('Education', 'Employment', 'Population'), 
                         selected = 'Population'
                         )
       updateSelectInput(session, 'year', label = 'Start Year')
@@ -37,7 +38,7 @@ serever <- function(input, output, session){
     else{
       updateSelectInput(session, 
                         'basic_metric', 
-                        choices = c('Education', 'Population', 'Employment', 'Poverty'), 
+                        choices = c('Education', 'Employment', 'Population', 'Poverty'), 
                         selected = 'Population'
                         )
       
@@ -64,7 +65,7 @@ serever <- function(input, output, session){
   })
   
   ## Years changes
-  observeEvent(list(input$chs, input$basic_metric, input$metric), {
+  observeEvent(metric_select(), {
     year <- metric_select()$Year %>% unique()
     updateSelectInput(session, 
                       'year', 
@@ -131,7 +132,11 @@ serever <- function(input, output, session){
     
   })
 
-  output$stmaps <- renderLeaflet(state_map(data_select(), input$metric))
+  output$stmaps <- renderLeaflet({
+    map_data <- data_select()
+    met <- input$metric
+    state_map(map_data, met)
+    })
   
   
   #test
