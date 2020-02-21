@@ -12,78 +12,110 @@ serever <- function(input, output, session){
       select(Name, Year, sel)
   })
   
+  # choose the type —— change UI
+  end_year <- reactive({
+    if(input$chs!='Snapshot'){
+      selectInput(inputId = 'end_year',
+                  label = 'End Year',
+                  choices = c('2011', '2012', '2013', '2014', 
+                              '2015', '2016', '2017', '2018')
+      )
+    }
+  })
+  
+  output$if_end <- renderUI(end_year())
+  
+  observeEvent(list(input$chs), {
+    if(input$chs!='Snapshot'){
+      updateSelectInput(session, 
+                        'basic_metric', 
+                        choices = c('Education', 'Population', 'Employment'), 
+                        selected = 'Population'
+                        )
+      updateSelectInput(session, 'year', label = 'Start Year')
+    }
+    else{
+      updateSelectInput(session, 
+                        'basic_metric', 
+                        choices = c('Education', 'Population', 'Employment', 'Poverty'), 
+                        selected = 'Population'
+                        )
+      
+      updateSelectInput(session, 'year')
+    }
+  })
+  #
+  
+  # The Basic Metric Changes --> The Selected Metric Change
   observeEvent(input$basic_metric, {
     choice <- basic_metric_select() %>% 
       select(-Name, -Year) %>%  
       colnames()
-    
     updateSelectInput(session, 'metric', choices=c(choice))
   })
+  #
   
-  # By Metric
+  # The Metric Changes --> The Selected Years Change 
+  ##   data selected by metric
   metric_select <- reactive({
     Econ_data_state %>% 
       select(Name, Year, input$metric) %>%
       drop_na()
   })
   
-  # choose the type —— change UI
-  end_year <- reactive({
-    if(input$chs!='Snapshot' & input$basic_metric!='Poverty'){
-      selectInput(inputId = 'end_year',
-                  label = 'End Year',
-                  choices = c('2011', '2012', '2013', '2014', 
-                              '2015', '2016', '2017', '2018')
-                  )
+  ## Years changes
+  observeEvent(list(input$chs, input$basic_metric, input$metric), {
+    year <- metric_select()$Year %>% unique()
+    updateSelectInput(session, 
+                      'year', 
+                      choices = year, 
+                      selected = year[1])
+    if(input$chs!='Snapshot'){
+      id <- match(input$year, year)
+      updateSelectInput(session, 
+                        'end_year', 
+                        choices = year[-1], 
+                        selected = year[-1][1])
     }
   })
-  output$if_end <- renderUI(end_year())
+  #
   
-  observeEvent(input$metric, {
-    year <- metric_select()$Year
-    updateSelectInput(session, 'year', choices=unique(year))
-    
-    if(input$chs!='Snapshot'& input$basic_metric!='Poverty'){
-      updateSelectInput(session, 'end_year', choices=unique(year)[-1])
+  # Start Year changes --> End Year changes
+  observeEvent(input$year, {
+    if(input$chs!='Snapshot'){
+      year <- metric_select()$Year %>% unique()
+      id <- match(input$year, year)
+      choices <- year[-c(1:id)]
+      updateSelectInput(session, 
+                        'end_year', 
+                        choices = choices, 
+                        selected = choices[1])
     }
   })
   
   # Get the df of map
   data_select <- reactive({
-    if(input$chs=='Changes by time' & input$basic_metric!='Poverty'){
-      dt <- metric_select() %>%
+    if(input$chs!='Snapshot'){
+      dt <- 
+        metric_select() %>%
         filter(Year==input$year | Year==input$end_year)
-      Value1 <- dt[, 3]
-      colnames(Value1) <-'Value1'
-      
-      dt <- dt %>%
-        cbind(Value1) %>%
-        select(Name, Year, Value1) %>%
-        pivot_wider(names_from = 'Year', values_from = 'Value1')
-      Value <- dt[, 3]-dt[, 2]
+      Value <- dt[, 3]
       colnames(Value) <-'Value'
-      
-      dt %>%
-        cbind(Value) %>% 
-        select('Name', 'Value') %>% 
-        right_join(names, by = "Name")
-    }
-    else if(input$chs=='%Change by time' & input$basic_metric!='Poverty') {
-      dt <- metric_select() %>%
-        filter(Year==input$year | Year==input$end_year)
-      Value1 <- dt[, 3]
-      colnames(Value1) <-'Value1'
-      
-      dt <- dt %>%
-        cbind(Value1) %>%
-        select(Name, Year, Value1) %>%
-        pivot_wider(names_from = 'Year', values_from = 'Value1')
-      Value <- (dt[, 3]-dt[, 2])/dt[, 2]
+      dt <- 
+        dt %>%
+        cbind(Value) %>%
+        select(Name, Year, Value) %>%
+        pivot_wider(names_from = 'Year', values_from = 'Value')
+      if(input$chs=='Changes by time'){
+        Value <- dt[, 3] - dt[, 2]
+      }
+      else {
+        Value <- (dt[, 3]-dt[, 2])/dt[, 2]
+      }
       colnames(Value) <-'Value'
-      
       dt %>%
-        cbind(Value) %>% 
-        select('Name', 'Value') %>% 
+        cbind(Value) %>%
+        select(Name, Value) %>%
         right_join(names, by = "Name")
     }
     else{
@@ -93,28 +125,30 @@ serever <- function(input, output, session){
       colnames(Value) <-'Value'
       dt %>%
         cbind(Value) %>%
-        select(Name, Value) %>% 
+        select(Name, Value) %>%
         right_join(names, by = "Name")
     }
+    
   })
-  
-  values <- reactive({
-    c(unlist(data_select()[,2]))
-  })
-  
-  observeEvent(input$chs, {
-    if(input$chs!='Snapshot' & input$basic_metric!='Poverty'){
-      updateSelectInput(session, 'year', label = 'Start Year')
-    }
-    else updateSelectInput(session, 'year', label = 'Year')
-  })
-  
-  output$stmaps <- renderLeaflet(state_map(values()))
+
+  output$stmaps <- renderLeaflet(state_map(data_select(), input$metric))
   
   
   #test
   output$test <- renderPrint({
-    data_select()
+    if(input$chs!='Snapshot'){
+    # dt <-
+    #   metric_select() %>%
+    #   filter(Year==input$year | Year==input$end_year)
+    # Value <- dt[, 3]
+    # colnames(Value) <-'Value'
+    # Value
+    # dt <- dt %>%
+    #   cbind(Value) %>%
+    #   select(Name, Year, Value) %>%
+    #   pivot_wider(names_from = 'Year', values_from = 'Value')
+    }
+   #metric_select()
   })
 }
 
