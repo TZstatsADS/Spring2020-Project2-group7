@@ -39,6 +39,12 @@ sidebar <- dashboardSidebar(
   
 # Body 
 body <- dashboardBody(
+  tags$head(
+    tags$style(type="text/css",
+               ".shiny-output-error { visibility: hidden; }",
+               ".shiny-output-error:before { visibility: hidden; }"
+    )
+  ),
   tabItems(
     # Home
     tabItem(tabName='Home',
@@ -66,7 +72,7 @@ body <- dashboardBody(
                   ),
                   selectInput(inputId = 'basic_metric', 
                               label = 'Metrics',
-                              choices = c('Education', 'Population', 'Employment', 'Poverty'), 
+                              choices = c('Education', 'Employment', 'Population', 'Poverty'), 
                               selected = 'Population'
                   ),
                   selectInput(inputId = 'metric', 
@@ -104,6 +110,7 @@ body <- dashboardBody(
 
 
 ui <- dashboardPage(
+  
   skin='green',
   header=header,
   sidebar=sidebar,
