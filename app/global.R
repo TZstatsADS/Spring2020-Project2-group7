@@ -7,11 +7,11 @@ library(viridis)
 library(htmltools)
 library(leaflet.extras)
 library(magrittr)
-devtools::session_info()
 
 
 load("../output/Econ_state_map.RData")
 Econ_data_state <- Econ_data_state %>% mutate(Name = str_to_upper(Name))
+
 
 mapStates = maps::map("state", fill = TRUE, plot = FALSE)
 names <- tibble(Name=str_to_upper(mapStates$names)) %>% 
