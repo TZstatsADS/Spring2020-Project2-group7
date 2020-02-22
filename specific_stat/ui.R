@@ -103,7 +103,8 @@ tabItems(
              box(width = 3, status='info',
                  selectInput(inputId = 'state', 
                              label = 'State', 
-                             choices = 'AL' 
+                             choices = Econ_data_county %>% 
+                               select(State) %>%unique()
                  ),
                  selectInput(inputId = 'county', 
                              label = 'County', 

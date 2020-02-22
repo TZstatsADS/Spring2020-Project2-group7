@@ -23,18 +23,12 @@ index<-function(df){
 serever <- function(input, output, session){
 
 
-observeEvent(input$state, {
-    state<-Econ_data_county %>% select(State)
-    updateSelectInput(session, 'state', choices=unique(state))
-  })
   
-state_select<-reactive({
-  Econ_data_county%>% 
-    filter(State==input$state)%>%drop_na()
-})
 
-observeEvent(input$county, {
-  con<- Econ_data_county%>%filter(State==input$state)%>%select(Name)
+
+observeEvent(input$state, {
+  con<-    Econ_data_county%>% 
+    filter(State==input$state)%>%select(Name)
   updateSelectInput(session, 'county', choices=unique(con))
 })
 
@@ -89,7 +83,7 @@ output$barplot1<- renderPlot({
     geom_point(aes(y = index2(year_select()%>%filter(Name==input$county)),
                   x= index1(year_select()%>%filter(Name==input$county)) ),
                   color='red',size=4)+
-    geom_text(aes(y = index2(year_select()%>%filter(Name==input$county))+.2,
+    geom_text(aes(y = index2(year_select()%>%filter(Name==input$county))+.3,
                   x= index1(year_select()%>%filter(Name==input$county)) ,
                   label=input$county))
 })
