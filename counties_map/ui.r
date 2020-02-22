@@ -64,15 +64,19 @@ body <- dashboardBody(
                   leafletOutput('stmaps', height=750)
               ),
               box(width = 3, status='info',
+                  radioButtons('chs', label = 'Please Choose:', 
+                               choices = c('Snapshot', 'Changes by time', '%Change by time'), 
+                               selected = 'Snapshot'
+                  ),
                   selectInput(inputId = 'state', 
                               label = 'State',
-                              choices = c(state.abb[1],state.abb[3:10], state.abb[12:length(state.abb)]), 
+                              choices = state_choise, 
                               selected = "AL"
                   ),
                   selectInput(inputId = 'basic_metric', 
                               label = 'Metrics',
                               choices = c('Education', 'Population', 'Employment', 'Poverty'), 
-                              selected = 'Population'
+                              selected = 'Education'
                   ),
                   selectInput(inputId = 'metric', 
                               label = 'Sub-Metrics', 
@@ -81,7 +85,8 @@ body <- dashboardBody(
                   selectInput(inputId = 'year', 
                               label = 'Year', 
                               choices = '' 
-                  )
+                  ),
+                  uiOutput('if_end')
               )
             )
             ),

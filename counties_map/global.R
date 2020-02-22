@@ -23,18 +23,25 @@ county_map <- function(df){
     mutate(state = paste0(toupper(substr(state,1,1)), substr(state, 2, nchar(state)))) %>% 
     mutate(county = paste0(toupper(substr(county,1,1)), substr(county, 2, nchar(county)), ifelse(state == 'Louisiana', ' Parish', ' County')))
   
-
+state_choise = state.abb
+names(state_choise) = state.name
+state_choise = c(state_choise[1],state_choise[3:10], state_choise[12:length(state_choise)])
+  
   
   df <- df %>% 
     right_join(names, by = c('Name' = 'county'))
   values <- c(unlist(df[,4]))
   metric <- colnames(df)[4]
+  precentage <- df[1,5]
   year <- df[1,3]
   state <- state.name[which(state.abb == df$State[1])]
   pal <- colorBin("YlOrRd", domain = values, bins = 9)
   labels <- sprintf(
-    "<strong>%s, %s </strong><br/><strong>%s in %s</strong><br/>%g",    
-    state, df$Name, metric, year, values) %>% 
+    "<strong>%s, %s </strong><br/><strong>%s<br/>in %s</strong><br/>%g",    
+    state, df$Name, metric, year, values)
+  if(precentage == 1)
+    labels <- paste0(labels, '%')
+  labels = labels%>% 
     lapply(htmltools::HTML)
   
   range <- mapcounty$range
