@@ -22,40 +22,64 @@ index<-function(df){
 
 serever <- function(input, output, session){
 
-  # By Basic Metric
-  
-metric_select <- reactive({
-    
-    Econ_data_county %>%select(State,Name,input$metric,Year)
-  }) 
 
-  observeEvent(input$metric, {
-   state<-  metric_select()$State
+observeEvent(input$state, {
+    state<-Econ_data_county %>% select(State)
     updateSelectInput(session, 'state', choices=unique(state))
   })
-
-  # By State
-  data_select <- reactive({
-    metric_select() %>% 
-      filter(State==input$state)%>%drop_na()
-  })
   
-  observeEvent(input$state, {
-    year <- data_select()$Year
+state_select<-reactive({
+  Econ_data_county%>% 
+    filter(State==input$state)%>%drop_na()
+})
+
+observeEvent(input$county, {
+  con<- Econ_data_county%>%filter(State==input$state)%>%select(Name)
+  updateSelectInput(session, 'county', choices=unique(con))
+})
+
+
+metric_choose <- reactive({
+  
+ yr<- Econ_data_county%>%select(Year,input$metric1)%>%drop_na()%>%select(Year)%>%unique()
+ 
+   Econ_data_county%>%
+   
+   filter(Year %in% unlist(yr) & State==input$state & Name==input$county)%>%
+   
+   pivot_longer(c(-State,-Year,-Name,-input$metric1), names_to = 'Metrics', values_to = 'Value') %>%
+  
+   drop_na() %>%
+     
+   select(Metrics) %>% 
+     
+   unique()
+ 
+}) 
+
+observeEvent(metric_choose(), {
+
+  updateSelectInput(session, 'metric2', choices=unique(metric_choose()))
+})
+
+metric_s<-reactive({
+  Econ_data_county %>%filter(State==input$state)%>%
+    select(State,Name,input$metric1,input$metric2,Year)%>%drop_na()
+})
+
+  
+  observeEvent(input$metric2, {
+    year <- metric_s()$Year
     
     updateSelectInput(session, 'year', choices=unique(year))
   })
   
   year_select <- reactive({
-    data_select() %>% 
+    metric_s() %>% 
       filter(Year==input$year)%>%drop_na()
   })
   
-  observeEvent(input$year, {
-    county <- year_select()$Name
-    
-    updateSelectInput(session, 'county', choices=unique(county))
-  })
+
 
 
  
@@ -75,7 +99,6 @@ output$table1<-DT::renderDataTable({
 })
 
 ##########################
-
 basic_metric_select <- reactive({
   sel <- if(input$basic_metric=='Education') colnames(Econ_data_county)[4:7]
   else if(input$basic_metric=='Population') colnames(Econ_data_county)[8:22]

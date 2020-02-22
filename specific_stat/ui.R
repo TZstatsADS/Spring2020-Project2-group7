@@ -101,23 +101,27 @@ tabItems(
             tabPanel('Graph', 
                      plotOutput("barplot1"))),
              box(width = 3, status='info',
-                 selectInput(inputId = 'metric', 
-                             label = 'Choose 2 Metrics', 
-                             choices =  Econ_data_county %>% 
-                               select(-Name, -State,-Year) %>%  
-                               colnames(), multiple = TRUE
-                 ), 
                  selectInput(inputId = 'state', 
                              label = 'State', 
                              choices = 'AL' 
                  ),
-                 selectInput(inputId = 'year', 
-                             label = 'Year', 
-                             choices = '' 
-                 ),
                  selectInput(inputId = 'county', 
                              label = 'County', 
                              choices = 'Autauga County' 
+                 ),
+                 selectInput(inputId = 'metric1', 
+                             label = 'Choose First Metric', 
+                             choices =  Econ_data_county %>% 
+                               select(-Name, -State,-Year) %>%  
+                               colnames()
+                 ), 
+                 selectInput(inputId = 'metric2', 
+                             label = 'Choose Second Metric', 
+                             choices = 'Employed'
+                 ), 
+                 selectInput(inputId = 'year', 
+                             label = 'Year', 
+                             choices = '' 
                  )
              )
         )   
@@ -152,11 +156,10 @@ tabItems(
   ),
   tabItem(tabName = 'ref', 
           'Here shows the references')
-            )   
-     
+)   
+
 
 )
-
 
  
 ui <- dashboardPage(
