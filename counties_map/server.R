@@ -33,11 +33,16 @@ serever <- function(input, output, session){
   
   observeEvent(input$metric, {
     year <- metric_select()$Year %>% unique()
-    if(input$basic_metric == 'Poverty'){
+    if(input$chs == 'Snapshot'){
       updateSelectInput(session, 'year', choices=year, select = year[1])
     }
     else{
-      updateSelectInput(session, 'year', choices=year[-length(year)], select = year[1])
+      if(input$basic_metric == 'Poverty'){
+        updateSelectInput(session, 'year', choices=year, select = year[1])
+      }
+      else{
+        updateSelectInput(session, 'year', choices=year[-length(year)], select = year[1])
+      }
     }
   })
   
@@ -98,7 +103,8 @@ serever <- function(input, output, session){
   data_select <- reactive({
     if(input$chs == 'Snapshot'){
       metric_select() %>% 
-        filter(Year == input$year)
+        filter(Year == input$year) %>%
+        mutate(chs = 1)
     }
     else{
       dt <- metric_select() %>%
@@ -109,17 +115,17 @@ serever <- function(input, output, session){
         pivot_wider(names_from = 'Year', values_from = 'Value')
       cname = colnames(dt)
       colnames(dt) = c('State', 'Name', 'Year1', 'Year2')
-      if(input$chs=='Changes by time'){
+      if(input$chs == 'Changes by time'){
         dt <- dt %>% mutate(Value = Year2 - Year1) 
       }
       else {
         dt <- dt %>% mutate(Value = (Year2 - Year1)/Year1*100) 
       }
-      precentage = ifelse(input$chs == '%Change by time', 1, 0)
+      chs = switch(input$chs, `Changes by time` = 2, `%Change by time` = 3)
       dt <- dt %>% mutate(Year = paste0(cname[3], ' to ', cname[4])) %>% 
         select(State, Name, Year, Value) %>% 
-        mutate(precentage = precentage)
-      colnames(dt) = c('State', 'Name', 'Year', mname, 'precentage')
+        mutate(chs = chs)
+      colnames(dt) = c('State', 'Name', 'Year', mname, 'chs')
       dt
     }
     
