@@ -43,7 +43,7 @@ body <- dashboardBody(
     # Home
     tabItem(tabName='Home',
             fluidPage(
-              img(src = "us-map-money.jpg",
+              img(src = 'https://www.wealthmanagement.com/sites/wealthmanagement.com/files/us-map-money.jpg',
                   style = 'position: absolute; opacity: 0.2'),
               fluidRow(h1("State and County Economic Data"),
                        h4("By Zidi Hong, Yuqiao Liu, Michael Petkun, Vikki Sui, and Jinxu Xiang"),
@@ -55,13 +55,10 @@ body <- dashboardBody(
                        h4(strong("Comparison Stats: "), "This tab allows the user to identify interesting areas by comparing across states or across counties within a state. For example, the user can view the top 10 Virginia counties in a chosen metric, as well as how those counties have evolved over time."),
                        h4(strong("Specific Stats: "), "This tab allows the user to zoom in on a specific state or county of interest, looking at how it has evolved over time and how it stacks up against other regions."),
                        h2("Data"),
-                       h4("This app uses data from ",
-                          tags$a(href = "https://catalog.data.gov/dataset/county-level-data-sets", "data.gov"),
-                          ", specifically four state-level and county-level socioeconomic data sets:"),
-                       h4(strong("Education"), " data collected by the U.S. Census Bureau and American Community Survey"),
-                       h4(strong("Unemployment"), " data collected by the U.S. Bureau of Labor Statistics, Local Area Unemployment Statistics (LAUS) Program"),
-                       h4(strong("Poverty"), " estimates from the U.S. Census Bureau, Small Area Income and Poverty Estimates (SAIPE) Program"),
-                       h4(strong("Population"), " estimates from the U.S. Census Bureau")
+                       h4(strong("Education"), " data includes the % of adults with various levels of education"),
+                       h4(strong("Unemployment"), " data includes the unemployment rate and the total civilian labor force"),
+                       h4(strong("Poverty"), " data includes the poverty rates for the entire population and for people ages 0-17, as well as median household income"),
+                       h4(strong("Population"), " data includes total population estimates, as well as rates of natural population changes (from births and deaths) and net migration")
                        )
             )
     ),
@@ -110,8 +107,23 @@ body <- dashboardBody(
     tabItem(tabName = 'county_stats',
             "code of stats by counties"
     ), 
-    tabItem(tabName = 'ref', 
-            'Here shows the references')
+    tabItem(tabName = 'ref',
+            fluidPage(
+              img(src = "us-map-money.jpg",
+                  style = 'position: absolute; opacity: 0.2'),
+              fluidRow(h2("Data Sources"),
+                       h4("This app uses data from ",
+                          tags$a(href = "https://catalog.data.gov/dataset/county-level-data-sets", "data.gov"),
+                          ", specifically four state-level and county-level socioeconomic data sets:"),
+                       h4(strong("Education"), " data collected by the U.S. Census Bureau and American Community Survey"),
+                       h4(strong("Unemployment"), " data collected by the U.S. Bureau of Labor Statistics, Local Area Unemployment Statistics (LAUS) Program"),
+                       h4(strong("Poverty"), " estimates from the U.S. Census Bureau, Small Area Income and Poverty Estimates (SAIPE) Program"),
+                       h4(strong("Population"), " estimates from the U.S. Census Bureau"),
+                       h2("Image Sources"),
+                       h4(tags$a(href = "https://www.wealthmanagement.com/sites/wealthmanagement.com/files/us-map-money.jpg",
+                                 "https://www.wealthmanagement.com/sites/wealthmanagement.com/files/us-map-money.jpg"))
+              )
+            ))
   )
 )
 
