@@ -8,24 +8,10 @@
 #
 
 library(shiny)
-load("~/Documents/GitHub/Spring2020-Project2-group7/output/Econ_county_map.Rdata")
-index1<-function(df){
-  df[,3]%>%unlist()
-}
-index2<-function(df){
-  df[,4]%>%unlist()
-}
-index<-function(df){
-  df%>%select(-Name,-Year,-State)%>%unlist()
-}
 
 
 serever <- function(input, output, session){
-
-
   
-
-
 observeEvent(input$state, {
   con<-    Econ_data_county%>% 
     filter(State==input$state)%>%select(Name)
@@ -85,7 +71,8 @@ output$barplot1<- renderPlot({
                   color='red',size=4)+
     geom_text(aes(y = index2(year_select()%>%filter(Name==input$county))+.3,
                   x= index1(year_select()%>%filter(Name==input$county)) ,
-                  label=input$county))
+                  label=input$county))+
+    labs(x="Metric1",y="Metric2")
 })
 
 output$table1<-DT::renderDataTable({
@@ -144,7 +131,7 @@ county_select <- reactive({
 output$barplot2<- renderPlot({
   ggplot(county_select())+
     geom_point(aes(x=Year, y=index(county_select())))+
-    geom_line(aes(x=Year, y=index(county_select())),group=1)
+    geom_line(aes(x=Year, y=index(county_select())),group=1)+labs(x="Year",y="Metric")
 })
 
 output$table2<-DT::renderDataTable({

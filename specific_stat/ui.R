@@ -9,14 +9,9 @@
 
 
 library(shiny)
-library(shinydashboard)
-library(tidyverse)
-library(ggplot2)
-library(plotly)
+
 # devtools::install_github("rstudio/leaflet#346")
-library(leaflet)
-library(crosstalk)
-library(htmltools)
+
 
 # Header
 header <- dashboardHeader(title='Project_2 Group_7')
