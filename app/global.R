@@ -6,10 +6,11 @@ library(tidyverse)
 library(viridis)
 library(htmltools)
 library(leaflet.extras)
-library(magrittr)
+
 
 
 load("../output/Econ_state_map.RData")
+
 Econ_data_state <- Econ_data_state %>% mutate(Name = str_to_upper(Name))
 
 

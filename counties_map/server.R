@@ -33,11 +33,16 @@ serever <- function(input, output, session){
   
   observeEvent(input$metric, {
     year <- metric_select()$Year %>% unique()
-    if(input$basic_metric == 'Poverty'){
+    if(input$chs == 'Snapshot'){
       updateSelectInput(session, 'year', choices=year, select = year[1])
     }
     else{
-      updateSelectInput(session, 'year', choices=year[-length(year)], select = year[1])
+      if(input$basic_metric == 'Poverty'){
+        updateSelectInput(session, 'year', choices=year, select = year[1])
+      }
+      else{
+        updateSelectInput(session, 'year', choices=year[-length(year)], select = year[1])
+      }
     }
   })
   
