@@ -45,14 +45,7 @@ serever <- function(input, output, session){
       }
     }
   })
-  
-  # observeEvent(input$year_xjx,{
-  #   if(input$chs_xjx!='Snapshot'){
-  #     e_year = e_year()
-  #     updateSelectInput(session, 'end_year_xjx', choices = e_year, selected = e_year[1])
-  #   }
-  # })
-  
+
   state_select <- reactive({
     Econ_data_county %>% 
       filter(State == input$state_xjx)
