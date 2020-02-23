@@ -3,8 +3,9 @@ library(shinydashboard)
 library(leaflet)
 library(maps)
 library(tidyverse)
-library(htmltools)
+library(viridis)
 library(leaflet.extras)
+library(RColorBrewer)
 
 #### County leaflet written by Jinxu Xiang
 
@@ -106,5 +107,63 @@ county_map_xjx <- function(df){
             title = NULL,
             position = "bottomright")
 }
+####################################################################################################
+# Yuqiao Liu
+load("../output/Econ_state_map_modified.RData")
+Econ_data_state <- Econ_data_state %>% mutate(Name = str_to_upper(Name))
 
+mapStates = maps::map("state", fill = TRUE, plot = FALSE)
+names <- tibble(Name=str_to_upper(mapStates$names)) %>% 
+  separate(Name, c('Name', 'sub'), ':') %>% 
+  select(Name)
+
+state_map <- function(df, input_metric, chs){
+  unit <- unit_lyq(input_metric, chs)
+  pal <- colorBin("YlGnBu", domain = df$Value)
+  labels <- sprintf(
+    "<strong>%s<br/>%s</strong><br/>%.4g %s",
+    df$Name, input_metric, df$Value, unit) %>%
+    lapply(htmltools::HTML)
+  
+  #State Map
+  leaflet(data = mapStates) %>%  
+    setView(-96, 37.8, 4.3) %>%
+    addTiles() %>%
+    addResetMapButton() %>% 
+    addPolygons(
+      fillColor = pal(df$Value),
+      weight = 2,
+      opacity = 1,
+      color='white',
+      dashArray = 3,
+      fillOpacity = .7,
+      highlightOptions = highlightOptions(weight = 4,
+                                          color = "#666",
+                                          dashArray = "",
+                                          fillOpacity = .75,
+                                          bringToFront = T
+      ),  
+      label = labels,
+      labelOptions = labelOptions(
+        style = list("font-weight" = "normal", 'padding' = "10px 15px"),
+        textsize = "15px",
+        direction = "auto")
+    ) %>%
+    addLegend(pal = pal,
+              values = df$Value,
+              opacity = 0.85,
+              title = NULL,
+              position = "bottomright")
+}
+
+unit_lyq <- function(input_metric, chs){
+  if(chs == '%Change by time') '%'
+  else{
+    if(input_metric %in% colnames(Econ_data_state[c(4:7, 9, 12, 14, 16, 17)])) '%'
+    else if(input_metric %in% colnames(Econ_data_state[c(10, 11)])) '\u2030'
+    else if(input_metric %in% colnames(Econ_data_state[c(8, 13)])) 'people'
+    else if(input_metric %in% colnames(Econ_data_state)[15]) 'dollars'
+  }
+}
+  
 
