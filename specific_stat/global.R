@@ -1,7 +1,8 @@
 library(tidyverse)
+library(shinydashboard)
 library(ggplot2)
 library(plotly)
-load("~/Documents/GitHub/Spring2020-Project2-group7/output/Econ_county_map.Rdata")
+load("~/Documents/GitHub/Spring2020-Project2-group7/output/Econ_county_map_modified.Rdata")
 index1<-function(df){
   df[,3]%>%unlist()
 }

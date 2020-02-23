@@ -92,9 +92,10 @@ tabItems(
         fluidRow(
           tabBox(id=' ', width =9, title=" ",
             tabPanel('Data',  
-                        DT::dataTableOutput("table1")),
+                        DT::dataTableOutput("table1"),
+            downloadButton("downloadData1", "Download")),
             tabPanel('Graph', 
-                     plotOutput("barplot1"))),
+                     plotlyOutput("barplot1"))),
              box(width = 3, status='info',
                  selectInput(inputId = 'state', 
                              label = 'State', 
@@ -113,7 +114,7 @@ tabItems(
                  ), 
                  selectInput(inputId = 'metric2', 
                              label = 'Choose Second Metric', 
-                             choices = 'Employed'
+                             choices = 'Population'
                  ), 
                  selectInput(inputId = 'year', 
                              label = 'Year', 
@@ -126,18 +127,19 @@ tabItems(
           fluidRow(
             tabBox(id=' ', width =9, title=" ",
                    tabPanel('Data',  
-                            DT::dataTableOutput("table2")),
+                            DT::dataTableOutput("table2"),
+                            downloadButton("downloadData2", "Download")),
                    tabPanel('Graph', 
-                            plotOutput("barplot2"))),
+                            plotlyOutput("barplot2"))),
             box(width = 3, status='info',
                 selectInput(inputId = 'basic_metric', 
-                            label = 'Metrics',
+                            label = 'Category',
                             choices = c('Education', 'Population', 'Employment'), 
                             selected = "Population"
                 ),
                 selectInput(inputId = 'metrics', 
-                            label = 'Sub-Metric', 
-                            choices = 'Employed'
+                            label = 'Metric', 
+                            choices = 'Population'
                 ), 
                 selectInput(inputId = 'states', 
                             label = 'State', 
