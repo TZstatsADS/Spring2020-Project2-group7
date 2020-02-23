@@ -1,7 +1,7 @@
 
 serever <- function(input, output, session){
-# County Map
 
+  #### County map written by Jinxu Xiang 
   
   observeEvent(list(input$chs_xjx), {
     if(input$chs_xjx!='Snapshot'){
@@ -131,7 +131,7 @@ serever <- function(input, output, session){
     
   })
   
-  output$stmaps_xjx <- renderLeaflet(county_map(data_select()))
+  output$stmaps_xjx <- renderLeaflet(county_map_xjx(data_select()))
   
   
   # #test

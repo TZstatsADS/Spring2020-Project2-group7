@@ -59,39 +59,43 @@ body <- dashboardBody(
               )
                      
       ),
-    # States MAPS
+    # States map
     tabItem(tabName = 'state_map', 
+            "code of state map"
+    ),
+    # County map written by Jinxu Xiang
+    tabItem(tabName = 'county_map',
             fluidRow(
-              box('The State Map', width=9, status='primary',
-                  leafletOutput('stmaps', height=700)
+              box('The County Map', width=9, status='primary',
+                  leafletOutput('stmaps_xjx', height=750)
               ),
-              box(status='info', width=3,
-                  radioButtons('chs', label = 'Please Choose:', 
+              box(width = 3, status='info',
+                  radioButtons(inputId = 'chs_xjx', label = 'Please Choose:', 
                                choices = c('Snapshot', 'Changes by time', '%Change by time'), 
                                selected = 'Snapshot'
                   ),
-                  selectInput(inputId = 'basic_metric', 
-                              label = 'Metrics',
-                              choices = c('Education', 'Employment', 'Population', 'Poverty'), 
-                              selected = 'Population'
+                  selectInput(inputId = 'state_xjx', 
+                              label = 'State',
+                              choices = state_choise_xjx, 
+                              selected = "AL"
                   ),
-                  selectInput(inputId = 'metric', 
+                  selectInput(inputId = 'basic_metric_xjx', 
+                              label = 'Metrics',
+                              choices = c('Education', 'Population', 'Employment', 'Poverty'), 
+                              selected = 'Education'
+                  ),
+                  selectInput(inputId = 'metric_xjx', 
                               label = 'Sub-Metrics', 
                               choices = 'Population'
                   ), 
-                  selectInput(inputId = 'year', 
+                  selectInput(inputId = 'year_xjx', 
                               label = 'Year', 
-                              choices = c('2010', '2011', '2012', '2013', '2014', 
-                                          '2015', '2016', '2017', '2018')
-                  ), 
-                  uiOutput('if_end')
+                              choices = '' 
+                  ),
+                  uiOutput('if_end_xjx')
               )
             )
     ),
-    # County Maps
-    tabItem(tabName = 'county_map',
-            "code of county map"
-            ),
     # State Statd
     tabItem(tabName = 'state_stats',
             "code of stats by states"

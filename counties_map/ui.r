@@ -70,7 +70,7 @@ body <- dashboardBody(
                   ),
                   selectInput(inputId = 'state_xjx', 
                               label = 'State',
-                              choices = state_choise, 
+                              choices = state_choise_xjx, 
                               selected = "AL"
                   ),
                   selectInput(inputId = 'basic_metric_xjx', 
