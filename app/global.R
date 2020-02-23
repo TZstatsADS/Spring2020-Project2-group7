@@ -6,7 +6,9 @@ library(tidyverse)
 library(viridis)
 library(leaflet.extras)
 library(RColorBrewer)
-
+library(ggplot2)
+library(plotly)
+library(scales)
 #### County leaflet written by Jinxu Xiang
 
 load("Econ_county_map_modified.RData")
@@ -166,4 +168,18 @@ unit_lyq <- function(input_metric, chs){
   }
 }
   
+###########################################################################################
+##Specific Stats
+index1<-function(df){
+  df[,3]%>%unlist()
+}
+index2<-function(df){
+  df[,4]%>%unlist()
+}
+index<-function(df){
+  df%>%select(-Name,-Year,-State)%>%unlist()
+}
+
+###########################################################################################
+
 

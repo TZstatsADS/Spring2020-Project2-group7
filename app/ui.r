@@ -141,19 +141,79 @@ body <- dashboardBody(
               )
             )
     ),
-    # State Statd
+    # Comparison Stats
     tabItem(tabName = 'comparison_state_stats', 
             "code of comparison state stats"
     ),
     tabItem(tabName = 'comparison_county_stats', 
             "code of comparison county stats"
     ),
+    # Specific Stats
     tabItem(tabName="specific_state_stats",
-            "......"
+            fluidRow(
+              tabBox(id=' ', width =9, title=" ",
+                     tabPanel('Data',  
+                              DT::dataTableOutput("table1_zh"),
+                              downloadButton("downloadData1_zh", "Download")),
+                     tabPanel('Graph', 
+                              plotlyOutput("barplot1_zh"))),
+              box(width = 3, status='info',
+                  selectInput(inputId = 'state_zh', 
+                              label = 'State', 
+                              choices = Econ_data_county %>% 
+                                select(State) %>%unique()
+                  ),
+                  selectInput(inputId = 'metric1_zh', 
+                              label = 'First Metric', 
+                              choices =  Econ_data_county %>% 
+                                select(-Name, -State,-Year) %>%  
+                                colnames()
+                  ), 
+                  selectInput(inputId = 'metric2_zh', 
+                              label = 'Second Metric', 
+                              choices = 'Population'
+                  ), 
+                  selectInput(inputId = 'year_zh', 
+                              label = 'Year', 
+                              choices = '' 
+                  ),
+                  selectInput(inputId = 'county_zh', 
+                              label = 'County', 
+                              choices = 'Autauga County' 
+                  )
+              )
+            )   
     ),
-    tabItem(tabName="specific_county_stats", 
-            "CODE"
+    tabItem(tabName="specific_county_stats",
+            fluidRow(
+              tabBox(id=' ', width =9, title=" ",
+                     tabPanel('Data',  
+                              DT::dataTableOutput("table2_zh"),
+                              downloadButton("downloadData2_zh", "Download")),
+                     tabPanel('Graph', 
+                              plotlyOutput("barplot2_zh"))),
+              box(width = 3, status='info',
+                  selectInput(inputId = 'basic_metric_zh', 
+                              label = 'Category',
+                              choices = c('Education', 'Population', 'Employment'), 
+                              selected = "Population"
+                  ),
+                  selectInput(inputId = 'metrics_zh', 
+                              label = 'Metric', 
+                              choices = 'Population'
+                  ), 
+                  selectInput(inputId = 'states_zh', 
+                              label = 'State', 
+                              choices = 'AL' 
+                  ),
+                  selectInput(inputId = 'counties_zh', 
+                              label = 'County', 
+                              choices = 'Autauga County' 
+                  )
+              )
+            )   
     ),
+    #Reference
     tabItem(tabName = 'ref',
             fluidPage(
               img(src = "us-map-money.jpg",
@@ -178,7 +238,7 @@ body <- dashboardBody(
 
 
 ui <- dashboardPage(
-  skin='green',
+  skin='blue',
   header=header,
   sidebar=sidebar,
   body=body

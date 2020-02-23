@@ -266,8 +266,161 @@ serever <- function(input, output, session){
     state_map(map_data, met, chs)
   })
 ####################################################################################################
+
+###Specific Stats
+## Zidi Hong
+  
+#####By state
+
+  
+  metric_choose_zh <- reactive({
+    yr<- Econ_data_county%>%select(Year,input$metric1_zh)%>%drop_na()%>%select(Year)%>%unique()
+    
+    Econ_data_county%>%filter(Year %in% unlist(yr) & State==input$state_zh )%>%
+      pivot_longer(c(-State,-Year,-Name,-input$metric1_zh), names_to = 'Metrics', values_to = 'Value') %>%
+      drop_na() %>%
+      select(Metrics) %>% 
+      unique()
+    
+  }) 
+  
+  observeEvent(metric_choose_zh(), {
+    
+    updateSelectInput(session, 'metric2_zh', choices=unique(metric_choose_zh()))
+  })
+  
+  metric_s<-reactive({
+    Econ_data_county %>%filter(State==input$state_zh)%>%
+      select(State,Name,input$metric1_zh,input$metric2_zh,Year)%>%drop_na()
+  })
   
   
+  observeEvent(input$metric2_zh, {
+    year_zh <- metric_s()$Year
+    
+    updateSelectInput(session, 'year_zh', choices=unique(year_zh))
+  })
+  
+  year_select_zh <- reactive({
+    metric_s() %>% 
+      filter(Year==input$year_zh)%>%drop_na()
+  })
+  
+  observeEvent(input$state_zh, {
+    con_zh<-    Econ_data_county%>% 
+      filter(State==input$state_zh)%>%select(Name)
+    updateSelectInput(session, 'county_zh', choices=unique(con_zh))
+  })
+  
+  
+###output
+  
+  output$barplot1_zh<- renderPlotly({
+    p1_zh<-ggplot(year_select_zh(),aes(x=index1(year_select_zh()), y=index2(year_select_zh())))+
+      geom_point()+
+      geom_point(aes(y = index2(year_select_zh()%>%filter(Name==input$county_zh)),
+                     x= index1(year_select_zh()%>%filter(Name==input$county_zh)) ),
+                 color='red',size=4)+
+      labs(x="First Metric",y="Second Metric")+theme_light()
+      
+    plotly1<-ggplotly(p1_zh)
+    plotly1%>%
+      style(text = paste0( year_select_zh()$Name,"</br></br>",
+                          "Metric1: ",index1(year_select_zh()),"</br>",
+                          "Metric2: ", index2(year_select_zh()), traces = 1))
+  })
+  
+  output$table1_zh<-DT::renderDataTable({
+    DT::datatable(year_select_zh())
+  })
+  
+  output$downloadData1_zh <- downloadHandler(
+    filename = function() {
+      paste('data-', Sys.Date(), '.csv', sep='')
+    },
+    content = function(file) {
+      write.csv(year_select_zh(), file)
+    }
+  )
+  
+  
+###########by county
+  
+  basic_metric_select_zh <- reactive({
+    sel_zh <- if(input$basic_metric_zh=='Education') colnames(Econ_data_county)[4:7]
+    else if(input$basic_metric_zh=='Population') colnames(Econ_data_county)[13:17]
+    else if(input$basic_metric_zh=='Employment') colnames(Econ_data_county)[8:9]
+    
+    
+    Econ_data_county %>% 
+      select(State, Name, Year, sel_zh)
+  })
+  
+  observeEvent(input$basic_metric_zh, {
+    choi <- basic_metric_select_zh() %>% 
+      select(-State, -Name, -Year) %>%  
+      colnames()
+    
+    updateSelectInput(session, 'metrics_zh', choices=c(choi))
+  })
+  
+  metric_sel_zh<- reactive({
+    Econ_data_county %>% 
+      select(State, Name, Year, input$metrics_zh) %>% 
+      drop_na()
+  })
+  
+  observeEvent(input$metrics_zh, {
+    stateq <- metric_sel_zh()$State
+    
+    updateSelectInput(session, 'states_zh', choices=unique(stateq))
+  }) 
+  
+  state_sel_zh <- reactive({
+    metric_sel_zh() %>% 
+      filter(State==input$states_zh)%>% 
+      drop_na()
+  })
+  
+  observeEvent(input$states_zh, {
+    counties_zh <- state_sel_zh()$Name
+    
+    updateSelectInput(session, 'counties_zh', choices=unique(counties_zh))
+  }) 
+  
+  county_select_zh <- reactive({
+    state_sel_zh() %>% 
+      filter(Name==input$counties_zh)%>%drop_na()
+  })
+  
+  
+###output
+  
+  output$barplot2_zh<- renderPlotly({
+    p2_zh<-ggplot(county_select_zh())+theme_light()+
+      geom_point(aes(x=Year, y=index(county_select_zh())))+
+      geom_line(aes(x=Year, y=index(county_select_zh())),group=1)+labs(x="Year",y="Metric")
+   
+     plotly2<-ggplotly(p2_zh)
+    
+    plotly2%>%
+      style(text = paste0("Year: ",county_select_zh()$Year, "</br></br>", 
+                          "Metric: ",index(county_select_zh())), traces = 1) 
+  })
+  
+  output$table2_zh<-DT::renderDataTable({
+    DT::datatable(county_select_zh())
+  })
+  
+  output$downloadData2_zh <- downloadHandler(
+    filename = function() {
+      paste('data-', Sys.Date(), '.csv', sep='')
+    },
+    content = function(file) {
+      write.csv(county_select_zh(), file)
+    }
+  )
+##############################################################################################  
  
 }
 
