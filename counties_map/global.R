@@ -9,7 +9,7 @@ library(htmltools)
 library(leaflet.extras)
 library(magrittr)
 
-load("../output/Econ_county_map.RData")
+load("../output/Econ_county_map_modified.RData")
 zoom = rep(7, length(state.abb))
 zoom[c(4)] = 6
 zoom[c(1,3,9,12,13,14,15,16,17,22,23,25,27,31,32,33,34,36,38,39,40,44,46)] = 8

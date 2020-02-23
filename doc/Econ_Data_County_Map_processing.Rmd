@@ -1,0 +1,28 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+load("../output/counties.RData")
+
+Econ_data_county = counties %>% 
+  pivot_wider(names_from = 'Metric', values_from = 'Value') %>% 
+  select(-FIPS)
+  select(State, Name, Year,
+         `% of adults completing some college`,
+         `% of adults with a bachelor's degree or higher`,
+         `% of adults with a high school diploma only`,
+         `% of adults with less than a high school diploma`,
+         Population, `Natural population increase rate`,
+         `Birth rate`, `Death rate`,
+         `Net migration rate`,
+         `Civilian Labor Force`, `Unemployment Rate`,
+         `Median Household Income`,
+         `% of people age 0-17 in poverty`,
+         `% of people in poverty`)
+
+save(Econ_data_county, file='../output/Econ_county_map_modified.RData')
+```
+

@@ -61,9 +61,9 @@ serever <- function(input, output, session){
   # By Basic Metric
   basic_metric_select <- reactive({
     sel <- if(input$basic_metric == 'Education') colnames(Econ_data_county)[4:7]
-           else if(input$basic_metric == 'Population') colnames(Econ_data_county)[18:31]
-           else if(input$basic_metric == 'Employment') colnames(Econ_data_county)[8:11]
-           else if(input$basic_metric == 'Poverty') colnames(Econ_data_county)[12:17]
+           else if(input$basic_metric == 'Population') colnames(Econ_data_county)[13:17]
+           else if(input$basic_metric == 'Employment') colnames(Econ_data_county)[8:9]
+           else if(input$basic_metric == 'Poverty') colnames(Econ_data_county)[10:12]
     
     state_select() %>% 
       select(State, Name, Year, sel)
