@@ -16,11 +16,9 @@ zoom[c(1,3,9,12,13,14,15,16,17,22,23,25,27,31,32,33,34,36,38,39,40,44,46)] = 8
 zoom[c(6,7,18,19,28,43)] = 9
 zoom[c(37)] = 10
 
-
 state_choise = state.abb
 names(state_choise) = state.name
 state_choise = c(state_choise[1],state_choise[3:10], state_choise[12:length(state_choise)])
-
 
 county_map <- function(df){
   mapcounty <- maps::map("county", regions = state.name[which(state.abb == df$State[1])], fill = TRUE, plot = FALSE)
@@ -28,6 +26,8 @@ county_map <- function(df){
     separate(Name, c('state', 'county'), ',') %>% 
     mutate(state = paste0(toupper(substr(state,1,1)), substr(state, 2, nchar(state)))) %>% 
     mutate(county = paste0(toupper(substr(county,1,1)), substr(county, 2, nchar(county)), ifelse(state == 'Louisiana', ' Parish', ' County')))
+  
+  
   
   df <- df %>% 
     right_join(names, by = c('Name' = 'county')) %>% 
@@ -38,14 +38,37 @@ county_map <- function(df){
   year <- df[1,3]
   state <- state.name[which(state.abb == df$State[1])]
   pal <- colorBin("YlOrRd", domain = values, bins = 9)
+  
+  if(metric == '% of adults with less than a high school diploma' | 
+     metric == '% of adults with a high school diploma only' | 
+     metric == '% of adults completing some college' | 
+     metric == '% of adults with a bachelor\'s degree or higher' |
+     metric == 'Unemployment Rate' | 
+     metric == '% of people in poverty' | 
+     metric == '% of people age 0-17 in poverty' ){
+    end_label = '%'
+  }
+  else if(metric == 'Birth rate' | 
+          metric == 'Death rate' | 
+          metric == 'Natural population increase rate' | 
+          metric == 'Net migration rate'){
+    end_label = '\u2030'
+  }
+  else if(metric == 'Civilian Labor Force' | metric == 'Population'){
+    end_label = ' people'
+  }
+  else{
+    end_label = '$'
+  }
+  
   if(chs == 1)
     labels <- sprintf(
-      "<strong>%s, %s </strong><br/><strong>%s<br/>in %s</strong><br/>%g",    
-      state, df$Name, metric, year, values)
+      "<strong>%s, %s </strong><br/><strong>%s<br/>in %s</strong><br/>%g%s",    
+      state, df$Name, metric, year, signif(values,4), end_label)
   else
     labels <- sprintf(
-      "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%g",    
-      state, df$Name, metric, year, values)
+      "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%g%s",    
+      state, df$Name, metric, year, signif(values,4), end_label)
   if(chs == 3)
     labels <- paste0(labels, '%')
   labels = labels%>% 
