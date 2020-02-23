@@ -37,7 +37,7 @@ county_map_xjx <- function(df){
   chs <- df[1,5]
   year <- df[1,3]
   state <- state.name[which(state.abb == df$State[1])]
-  pal <- colorBin("YlOrRd", domain = values, bins = 9)
+  pal <- colorBin("YlGnBu", domain = values, bins = 9)
   
   if(metric == '% of adults with less than a high school diploma' | 
      metric == '% of adults with a high school diploma only' | 
