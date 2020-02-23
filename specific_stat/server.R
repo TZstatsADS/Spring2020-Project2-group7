@@ -63,8 +63,8 @@ metric_s<-reactive({
 
 
  
-output$barplot1<- renderPlot({
-  ggplot(year_select(),aes(x=index1(year_select()), y=index2(year_select())))+
+output$barplot1<- renderPlotly({
+  p1<-ggplot(year_select(),aes(x=index1(year_select()), y=index2(year_select())))+
     geom_point()+
     geom_point(aes(y = index2(year_select()%>%filter(Name==input$county)),
                   x= index1(year_select()%>%filter(Name==input$county)) ),
@@ -73,17 +73,28 @@ output$barplot1<- renderPlot({
                   x= index1(year_select()%>%filter(Name==input$county)) ,
                   label=input$county))+
     labs(x="Metric1",y="Metric2")
+  ggplotly(p1,tooltip=c("x"="Metric"))
 })
 
 output$table1<-DT::renderDataTable({
   DT::datatable(year_select())
 })
 
+output$downloadData1 <- downloadHandler(
+  filename = function() {
+    paste('data-', Sys.Date(), '.csv', sep='')
+  },
+  content = function(file) {
+    write.csv(year_select(), file)
+  }
+)
+
+
 ##########################
 basic_metric_select <- reactive({
   sel <- if(input$basic_metric=='Education') colnames(Econ_data_county)[4:7]
-  else if(input$basic_metric=='Population') colnames(Econ_data_county)[8:22]
-  else if(input$basic_metric=='Employment') colnames(Econ_data_county)[23:26]
+  else if(input$basic_metric=='Population') colnames(Econ_data_county)[13:17]
+  else if(input$basic_metric=='Employment') colnames(Econ_data_county)[8:9]
   
   
   Econ_data_county %>% 
@@ -128,13 +139,24 @@ county_select <- reactive({
 })
 
 
-output$barplot2<- renderPlot({
-  ggplot(county_select())+
+output$barplot2<- renderPlotly({
+  p2<-ggplot(county_select())+
     geom_point(aes(x=Year, y=index(county_select())))+
     geom_line(aes(x=Year, y=index(county_select())),group=1)+labs(x="Year",y="Metric")
+  ggplotly(p2,tooltip=c("x"="Metric"))
 })
 
 output$table2<-DT::renderDataTable({
   DT::datatable(county_select())
 })
+
+output$downloadData2 <- downloadHandler(
+  filename = function() {
+    paste('data-', Sys.Date(), '.csv', sep='')
+  },
+  content = function(file) {
+    write.csv(county_select(), file)
+  }
+)
+
 }
