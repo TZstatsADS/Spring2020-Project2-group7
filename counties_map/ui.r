@@ -61,32 +61,32 @@ body <- dashboardBody(
     tabItem(tabName = 'county_map',
             fluidRow(
               box('The County Map', width=9, status='primary',
-                  leafletOutput('stmaps', height=750)
+                  leafletOutput('stmaps_xjx', height=750)
               ),
               box(width = 3, status='info',
-                  radioButtons('chs', label = 'Please Choose:', 
+                  radioButtons('chs_xjx', label = 'Please Choose:', 
                                choices = c('Snapshot', 'Changes by time', '%Change by time'), 
                                selected = 'Snapshot'
                   ),
-                  selectInput(inputId = 'state', 
+                  selectInput(inputId = 'state_xjx', 
                               label = 'State',
                               choices = state_choise, 
                               selected = "AL"
                   ),
-                  selectInput(inputId = 'basic_metric', 
+                  selectInput(inputId = 'basic_metric_xjx', 
                               label = 'Metrics',
                               choices = c('Education', 'Population', 'Employment', 'Poverty'), 
                               selected = 'Education'
                   ),
-                  selectInput(inputId = 'metric', 
+                  selectInput(inputId = 'metric_xjx', 
                               label = 'Sub-Metrics', 
                               choices = 'Population'
                   ), 
-                  selectInput(inputId = 'year', 
+                  selectInput(inputId = 'year_xjx', 
                               label = 'Year', 
                               choices = '' 
                   ),
-                  uiOutput('if_end')
+                  uiOutput('if_end_xjx')
               )
             )
             ),
