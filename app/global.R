@@ -9,7 +9,7 @@ library(RColorBrewer)
 
 #### County leaflet written by Jinxu Xiang
 
-load("../output/Econ_county_map_modified.RData")
+load("Econ_county_map_modified.RData")
 zoom_xjx = rep(7, length(state.abb))
 zoom_xjx[c(4)] = 6
 zoom_xjx[c(1,3,9,12,13,14,15,16,17,22,23,25,27,31,32,33,34,36,38,39,40,44,46)] = 8
@@ -109,7 +109,7 @@ county_map_xjx <- function(df){
 }
 ####################################################################################################
 # Yuqiao Liu
-load("../output/Econ_state_map_modified.RData")
+load("Econ_state_map_modified.RData")
 Econ_data_state <- Econ_data_state %>% mutate(Name = str_to_upper(Name))
 
 mapStates = maps::map("state", fill = TRUE, plot = FALSE)
