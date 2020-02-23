@@ -1,7 +1,7 @@
 
 serever <- function(input, output, session){
 
-  #### County map written by Jinxu Xiang 
+#################County map written by Jinxu Xiang 
   
   observeEvent(list(input$chs_xjx), {
     if(input$chs_xjx!='Snapshot'){
@@ -19,7 +19,7 @@ serever <- function(input, output, session){
                         selected = 'Population'
       )
       
-      updateSelectInput(session, 'year_xjx')
+      updateSelectInput(session, 'year_xjx', label = 'Year')
     }
   })
   
@@ -88,7 +88,6 @@ serever <- function(input, output, session){
   end_year <- reactive({
     if(input$chs_xjx!='Snapshot'){
       e_year = e_year()
-      
       selectInput(inputId = 'end_year_xjx',
                   label = 'End Year',
                   choices = e_year,
@@ -132,12 +131,151 @@ serever <- function(input, output, session){
   })
   
   output$stmaps_xjx <- renderLeaflet(county_map_xjx(data_select()))
+
+####################################################################################################
+  # Yuqiao Liu
+  # State Map
+  # By Basic Metric
+  
+  basic_metric_select_lyq <- reactive({
+    sel <- if(input$basic_metric_lyq=='Education') colnames(Econ_data_state)[4:7]
+    else if(input$basic_metric_lyq=='Population') colnames(Econ_data_state)[8:12]
+    else if(input$basic_metric_lyq=='Employment') colnames(Econ_data_state)[13:14]
+    else if(input$basic_metric_lyq=='Poverty') colnames(Econ_data_state)[15:17]
+    
+    Econ_data_state %>% 
+      select(Name, Year, sel)
+  })
+  
+  # choose the type --> change UI
+  end_year_lyq <- reactive({
+    if(input$chs_lyq!='Snapshot'){
+      selectInput(inputId = 'end_year_lyq',
+                  label = 'End Year',
+                  choices = c('2011', '2012', '2013', '2014', 
+                              '2015', '2016', '2017', '2018')
+      )
+    }
+  })
+  
+  output$if_end_lyq <- renderUI(end_year_lyq())
+  
+  observeEvent(input$chs_lyq, {
+    if(input$chs_lyq!='Snapshot'){
+      updateSelectInput(session, 
+                        'basic_metric_lyq', 
+                        choices = c('Education', 'Employment', 'Population'), 
+                        selected = 'Population'
+      )
+      updateSelectInput(session, 'year_lyq', label = 'Start Year')
+    }
+    else{
+      updateSelectInput(session, 
+                        'basic_metric_lyq', 
+                        choices = c('Education', 'Employment', 'Population', 'Poverty'), 
+                        selected = 'Population'
+      )
+      
+      updateSelectInput(session, 'year_lyq')
+    }
+  })
+  #
+  
+  # The Basic Metric Changes --> The Selected Metric Change
+  observeEvent(input$basic_metric_lyq, {
+    choice <- basic_metric_select_lyq() %>% 
+      select(-Name, -Year) %>%  
+      colnames()
+    updateSelectInput(session, 'metric_lyq', choices=c(choice))
+  })
+  #
+  
+  # The Metric Changes --> The Selected Years Change 
+  ##   data selected by metric
+  metric_select_lyq <- reactive({
+    Econ_data_state %>% 
+      select(Name, Year, input$metric_lyq) %>%
+      drop_na()
+  })
+  
+  ## Years changes
+  observeEvent(  metric_select_lyq(), {
+    year <-   metric_select_lyq()$Year %>% unique()
+    updateSelectInput(session, 
+                      'year_lyq', 
+                      choices = year, 
+                      selected = year[1])
+    if(input$chs_lyq!='Snapshot'){
+      id <- match(input$year_lyq, year)
+      updateSelectInput(session, 
+                        'end_year_lyq', 
+                        choices = year[-1], 
+                        selected = year[-1][1])
+    }
+  })
+  #
+  
+  # Start Year changes --> End Year changes
+  observeEvent(input$year_lyq, {
+    if(input$chs_lyq!='Snapshot'){
+      year <-   metric_select_lyq()$Year %>% unique()
+      id <- match(input$year_lyq, year)
+      choices <- year[-c(1:id)]
+      updateSelectInput(session,
+                        'end_year_lyq',
+                        choices = choices,
+                        selected = choices[1])
+    }
+  })
+  
+  # Get the df of map
+  data_select_lyq <- reactive({
+    if(input$chs_lyq!='Snapshot'){
+      dt <- 
+        metric_select_lyq() %>%
+        filter(Year==input$year_lyq | Year==input$end_year_lyq)
+      Value <- dt[, 3]
+      colnames(Value) <-'Value'
+      dt <- 
+        dt %>%
+        cbind(Value) %>%
+        select(Name, Year, Value) %>%
+        pivot_wider(names_from = 'Year', values_from = 'Value')
+      if(input$chs_lyq=='Changes by time'){
+        Value <- dt[, 3] - dt[, 2]
+      }
+      else {
+        Value <- (dt[, 3]-dt[, 2])/dt[, 2]
+        unit <- '%'
+      }
+      colnames(Value) <-'Value'
+      dt %>%
+        cbind(Value) %>%
+        select(Name, Value) %>%
+        right_join(names, by = "Name")
+    }
+    else{
+      dt <- metric_select_lyq() %>%
+        filter(Year==input$year_lyq)
+      Value <- dt[, 3]
+      colnames(Value) <-'Value'
+      dt %>%
+        cbind(Value) %>%
+        select(Name, Value) %>%
+        right_join(names, by = "Name")
+    }
+  })
+  
+  output$stmaps_lyq <- renderLeaflet({
+    chs <- input$chs_lyq
+    map_data <- data_select_lyq()
+    met <- input$metric_lyq
+    state_map(map_data, met, chs)
+  })
+####################################################################################################
   
   
-  # #test
-  # output$test <- DT::renderDataTable({
-  #   metric_select()
-  # })
+ 
 }
 
 
