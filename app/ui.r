@@ -82,7 +82,7 @@ body <- dashboardBody(
     tabItem(tabName = 'state_map', 
             fluidRow(
               box(h3(strong('The State Map')), width=9, status='primary',
-                  leafletOutput('stmaps_lyq', height=700),
+                  leafletOutput('stmaps_lyq', height = 580),
               ),
               box(status='info', width=3,
                   radioButtons(inputId = 'chs_lyq', 
@@ -112,7 +112,7 @@ body <- dashboardBody(
     tabItem(tabName = 'county_map',
             fluidRow(
               box(h3(strong('The County Map')), width=9, status='primary',
-                  leafletOutput('stmaps_xjx', height=750)
+                  leafletOutput('stmaps_xjx', height = 580)
               ),
               box(width = 3, status='info',
                   radioButtons(inputId = 'chs_xjx', label = 'Please Choose:', 
