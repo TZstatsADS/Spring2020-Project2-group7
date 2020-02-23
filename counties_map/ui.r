@@ -64,7 +64,7 @@ body <- dashboardBody(
                   leafletOutput('stmaps_xjx', height=750)
               ),
               box(width = 3, status='info',
-                  radioButtons('chs_xjx', label = 'Please Choose:', 
+                  radioButtons(inputId = 'chs_xjx', label = 'Please Choose:', 
                                choices = c('Snapshot', 'Changes by time', '%Change by time'), 
                                selected = 'Snapshot'
                   ),
