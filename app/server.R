@@ -392,9 +392,10 @@ serever <- function(input, output, session){
   })
   
   observeEvent(input$metrics_zh, {
-    stateq <- metric_sel_zh()$State
+    stateq <- metric_sel_zh()$State %>% unique()
+    abb = abb_zh[abb_zh %in% stateq]
     
-    updateSelectInput(session, 'states_zh', choices=unique(stateq))
+    updateSelectInput(session, 'states_zh', choices = abb)
   }) 
   
   state_sel_zh <- reactive({

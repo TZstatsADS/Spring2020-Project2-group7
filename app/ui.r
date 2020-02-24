@@ -199,8 +199,7 @@ body <- dashboardBody(
               box(width = 2, status='info',
                   selectInput(inputId = 'state_zh', 
                               label = 'State', 
-                              choices = Econ_data_county %>% 
-                                select(State) %>%unique()
+                              choices = abb_zh
                   ),
                   selectInput(inputId = 'metric1_zh', 
                               label = 'First Metric', 
@@ -246,7 +245,7 @@ body <- dashboardBody(
                   ), 
                   selectInput(inputId = 'states_zh', 
                               label = 'State', 
-                              choices = 'AL' 
+                              choices = abb_zh 
                   ),
                   selectInput(inputId = 'counties_zh', 
                               label = 'County', 

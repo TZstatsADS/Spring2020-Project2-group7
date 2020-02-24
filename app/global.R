@@ -9,6 +9,7 @@ library(RColorBrewer)
 library(ggplot2)
 library(plotly)
 library(scales)
+library(dplyr)
 #### County leaflet written by Jinxu Xiang
 
 load("Econ_county_map_modified.RData")
@@ -183,6 +184,11 @@ index2<-function(df){
 index<-function(df){
   df%>%select(-Name,-Year,-State)%>%unlist()
 }
+
+abb_zh = with(Econ_data_county %>% 
+  select(State) %>%unique() %>% c(), State)
+name_zh = c(state.name[1:8], 'Washington D.C', state.name[9:50], 'Puerto Rico')
+names(abb_zh) = name_zh
 
 ###########################################################################################
 
