@@ -184,7 +184,7 @@ index<-function(df){
 ###########################################################################################
 
 ## Vikki Sui
-load("../app/counties_new.RData")
+load("counties_new.RData")
 basemetric_choice <- counties_new$base_metric %>% unique()
 metric_choice <- counties_new$Metric %>% unique()
 state_choice <-counties_new$State %>% unique()
