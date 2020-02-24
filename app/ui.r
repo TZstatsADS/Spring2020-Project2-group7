@@ -83,7 +83,7 @@ body <- dashboardBody(
     tabItem(tabName = 'state_map', 
             fluidRow(
               box(h3(strong('The State Map')), width=9, status='primary',
-                  leafletOutput('stmaps_lyq', height = 580),
+                  leafletOutput('stmaps_lyq', height = 500),
               ),
               box(status='info', width=3,
                   radioButtons(inputId = 'chs_lyq', 
@@ -113,7 +113,7 @@ body <- dashboardBody(
     tabItem(tabName = 'county_map',
             fluidRow(
               box(h3(strong('The County Map')), width=9, status='primary',
-                  leafletOutput('stmaps_xjx', height = 580)
+                  leafletOutput('stmaps_xjx', height = 500)
               ),
               box(width = 3, status='info',
                   radioButtons(inputId = 'chs_xjx', label = 'Please Choose:', 
@@ -291,7 +291,7 @@ body <- dashboardBody(
     #Reference
     tabItem(tabName = 'ref',
             fluidPage(
-              img(src = "us-map-money.jpg",
+              img(src = "https://www.wealthmanagement.com/sites/wealthmanagement.com/files/us-map-money.jpg",
                   style = 'position: absolute; opacity: 0.2'),
               fluidRow(h2("Data Sources"),
                        h4("This app uses data from ",
