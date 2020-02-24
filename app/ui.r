@@ -168,10 +168,11 @@ body <- dashboardBody(
                         "Please choose a year:",
                         choices = "Population"
                         ),
-            selectInput("top_n_vk", 
+            numericInput("top_n_vk", 
                         "Top_n:",
-                        choices = c(1:10), 
-                        selected = 5),
+                        value = 5, 
+                        min = 1, 
+                        max = 20),
             radioButtons(inputId = "sort_vk", 
                          label = "Variable:",
                          choices = c("Ascending" = "ascending", "Descending" = "descending")
@@ -205,11 +206,11 @@ body <- dashboardBody(
                         "Please choose a year:", 
                         choices = "Population"
                         ),
-            selectInput("top_n2_vk", 
-                        "Top_n:", 
-                        choices = c(1:10), 
-                        selected = 5
-                        ),
+            numericInput("top_n2_vk", 
+                          "Top_n:",
+                          value = 5, 
+                          min = 1, 
+                          max = 20),
             radioButtons(inputId = "sort2_vk", 
                          label = "Variable:",
                          choices = c("Ascending" = "ascending", "Descending" = "descending")
