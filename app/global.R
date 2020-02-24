@@ -187,6 +187,6 @@ index<-function(df){
 
 ## Vikki Sui
 load("counties_new.RData")
-basemetric_choice <- counties_new$base_metric %>% unique()
+basemetric_choice <- c("Education", "Employment", "Population")
 metric_choice <- counties_new$Metric %>% unique()
 state_choice <-counties_new$State %>% unique()
