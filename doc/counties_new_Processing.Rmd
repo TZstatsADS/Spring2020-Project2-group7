@@ -41,7 +41,7 @@ df_join[52,2] = 'Puerto Rico'
 df = left_join(df, df_join, by = c('State' = 'abb')) %>% 
   select(FIPS, State = name, Name, Metric, Year, Value, base_metric)
 
-counties_new <- df
+counties_new <- df %>% mutate(Value = signif(Value, 5))
 save(counties_new, file="../app/counties_new.RData")
 ```
 
