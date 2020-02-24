@@ -31,7 +31,7 @@ serever <- function(input, output, session){
     updateSelectInput(session, 'metric_xjx', choices=c(choice))
   })
   
-  observeEvent(input$metric_xjx, {
+  observeEvent(list(input$metric_xjx, input$chs_xjx), {
     year <- metric_select()$Year %>% unique()
     if(input$chs_xjx == 'Snapshot'){
       updateSelectInput(session, 'year_xjx', choices=year, select = year[1])
@@ -192,11 +192,11 @@ serever <- function(input, output, session){
   })
   
   ## Years changes
-  observeEvent(  metric_select_lyq(), {
-    year <-   metric_select_lyq()$Year %>% unique()
+  observeEvent(list(metric_select_lyq(), input$chs_lyq), {
+    year <- metric_select_lyq()$Year %>% unique()
     updateSelectInput(session, 
                       'year_lyq', 
-                      choices = year, 
+                      choices = year[1:length(year)], 
                       selected = year[1])
     if(input$chs_lyq!='Snapshot'){
       id <- match(input$year_lyq, year)
@@ -204,6 +204,10 @@ serever <- function(input, output, session){
                         'end_year_lyq', 
                         choices = year[-1], 
                         selected = year[-1][1])
+      updateSelectInput(session, 
+                        'year_lyq', 
+                        choices = year[1:(length(year)-1)], 
+                        selected = year[1])
     }
   })
   #
@@ -331,18 +335,16 @@ serever <- function(input, output, session){
             )+
       labs(x="First Metric",y="Second Metric")+theme_light()
       
-    plotly1 <- ggplotly(p1_zh)
+    plotly111 <- ggplotly(p1_zh)
     # plotly1 %>%
     #   style(text = paste0(year_select_zh()$Name,"</br></br>",
     #                       "Metric1: ",index1(year_select_zh()),"</br>",
     #                       "Metric2: ", index2(year_select_zh()), traces = 1))
-    plotly1 %>%
-      style(text = paste0(data111$Name,"</br></br>",
+    
+    plotly111 %>%
+      style(text = paste0(data111,"</br></br>",
                           "Metric1: ",index1(data111),"</br>",
-                          "Metric2: ", index2(data111), traces = 1)) %>% 
-      style(text = paste0(data222$Name,"</br></br>",
-                          "Metric1: ",index1(data222),"</br>",
-                          "Metric2: ", index2(data222), traces = 1))
+                          "Metric2: ", index2(data111), traces = 1))
   })
   
   output$table1_zh<-DT::renderDataTable({
