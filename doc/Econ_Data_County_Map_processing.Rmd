@@ -8,8 +8,9 @@ library(tidyverse)
 load("../output/counties.RData")
 
 Econ_data_county = counties %>% 
+  mutate(Value = signif(Value, 5)) %>% 
   pivot_wider(names_from = 'Metric', values_from = 'Value') %>% 
-  select(-FIPS)
+  select(-FIPS) %>%
   select(State, Name, Year,
          `% of adults completing some college`,
          `% of adults with a bachelor's degree or higher`,
