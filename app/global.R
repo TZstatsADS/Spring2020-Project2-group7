@@ -170,6 +170,7 @@ unit_lyq <- function(input_metric, chs){
   
 ###########################################################################################
 ##Specific Stats
+theme_set(theme_light())
 index1<-function(df){
   df[,3]%>%unlist()
 }
@@ -183,7 +184,7 @@ index<-function(df){
 ###########################################################################################
 
 ## Vikki Sui
-load("../app/counties_new.RData")
+load("counties_new.RData")
 basemetric_choice <- counties_new$base_metric %>% unique()
 metric_choice <- counties_new$Metric %>% unique()
 state_choice <-counties_new$State %>% unique()
