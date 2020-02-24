@@ -147,12 +147,12 @@ body <- dashboardBody(
             fluidRow(
               tabBox(title = "",
                      # The id lets us use input$tabset1 on the server to find the current tab
-                     id = "tabset1", height = "300px", width = 9,
+                     id = "tabset1", height = "300px", width = 10,
                      tabPanel("Plot", plotlyOutput("year_change_plot_states_vk")),
                      tabPanel("Data", DT::dataTableOutput("year_change_data_states_vk"), 
                               downloadButton("downloadid_vk", "Download data"))
               ),
-              box(width = 3, status='info',
+              box(width = 2, status='info',
                   selectInput("base_metric_vk", "Category:",
                               choices = basemetric_choice, selected = basemetric_choice[1]),
                   selectInput("metric_vk", "Metric", choices = "Population"),
@@ -168,12 +168,12 @@ body <- dashboardBody(
             fluidRow(
               tabBox(title = "",
                      # The id lets us use input$tabset1 on the server to find the current tab
-                     id = "tabset1", height = "300px", width = 9,
+                     id = "tabset1", height = "300px", width = 10,
                      tabPanel("Plot", plotlyOutput("year_change_plot_counties_vk")),
                      tabPanel("Data", DT::dataTableOutput("year_change_data_counties_vk"), 
                               downloadButton("downloadid2_vk", "Download data"))
               ),
-              box(width = 3, status='info',
+              box(width = 2, status='info',
                   selectInput("base_metric2_vk", "Category:",
                               choices = basemetric_choice, selected = basemetric_choice[1]),
                   selectInput("metric2_vk", "Metric", choices = "Population"),
@@ -187,7 +187,7 @@ body <- dashboardBody(
     # Specific Stats
     tabItem(tabName="specific_state_stats",
             fluidRow(
-              tabBox(id=' ', width = 9, title=" ", #status = 'primary',
+              tabBox(id=' ', width = 10, title=" ", #status = 'primary',
                      tabPanel('Plot', 
                               plotlyOutput("barplot1_zh")
                               ),
@@ -196,7 +196,7 @@ body <- dashboardBody(
                               downloadButton("downloadData1_zh", "Download")
                               )
                      ),
-              box(width = 3, status='info',
+              box(width = 2, status='info',
                   selectInput(inputId = 'state_zh', 
                               label = 'State', 
                               choices = Econ_data_county %>% 
@@ -225,7 +225,7 @@ body <- dashboardBody(
     ),
     tabItem(tabName="specific_county_stats",
             fluidRow(
-              tabBox(id=' ', width = 9, title=" ",
+              tabBox(id=' ', width = 10, title=" ",
                      tabPanel('Plot', 
                               plotlyOutput("barplot2_zh")
                      ),
@@ -234,7 +234,7 @@ body <- dashboardBody(
                               downloadButton("downloadData2_zh", "Download")
                               )
                      ),
-              box(width = 3, status='info',
+              box(width = 2, status='info',
                   selectInput(inputId = 'basic_metric_zh', 
                               label = 'Category',
                               choices = c('Education', 'Population', 'Employment'), 
