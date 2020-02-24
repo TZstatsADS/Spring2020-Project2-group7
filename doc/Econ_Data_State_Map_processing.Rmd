@@ -6,7 +6,8 @@ output: html_notebook
 ```{r}
 load("../output/states.RData")
 
-Econ_data_state <- states %>% 
+Econ_data_state <- states %>%
+  mutate(Value = signif(Value, 5)) %>% 
   spread(Metric, Value) %>% 
   select(State, Name, Year, 
          `% of adults completing some college`, 
