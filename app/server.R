@@ -459,7 +459,7 @@ serever <- function(input, output, session){
   data_select_vk <- reactive({
     metric_select_vk() %>% 
       group_by(Year, State) %>% 
-      summarise(Value = mean(Value, na.rm = TRUE)) %>% 
+      summarise(Value = signif(mean(Value, na.rm = TRUE), 5)) %>% 
       pivot_wider(names_from = Year, values_from = Value)
   })
   
@@ -534,7 +534,7 @@ serever <- function(input, output, session){
   data_select2_vk <- reactive({
     metric_select2_vk() %>% 
       group_by(Year, Name) %>% 
-      summarise(Value = mean(Value, na.rm = TRUE)) %>% 
+      summarise(Value = signif(mean(Value, na.rm = TRUE), 5)) %>% 
       pivot_wider(names_from = Year, values_from = Value)
   })
   
