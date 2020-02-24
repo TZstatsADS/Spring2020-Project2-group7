@@ -499,7 +499,7 @@ serever <- function(input, output, session){
       scale_x_continuous(breaks = 2:n, labels = temp_name[2:n]) + 
       xlab("year") + 
       ylab(input$metric_vk)
-    ggplotly(p222)
+    ggplotly(p222, tooltip = c("State", "y"))
   })
   
   output$year_change_data_states_vk <- DT::renderDataTable({
@@ -573,7 +573,7 @@ serever <- function(input, output, session){
                          labels = temp_name[2:n]) + 
       xlab("year") + 
       ylab(input$metric2_vk)
-    ggplotly(p111)
+    ggplotly(p111, tooltip = c("Name", "y"))
   })
   
   output$year_change_data_counties_vk <- DT::renderDataTable({
