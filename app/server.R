@@ -329,22 +329,28 @@ serever <- function(input, output, session){
             x = index1(data111))
       )+
       geom_point(
-        aes(y = index2(data222),
-            x = index1(data222)),
-            color='red',size=4
-            )+
-      labs(x="First Metric",y="Second Metric")+theme_light()
-      
-    plotly111 <- ggplotly(p1_zh)
-    # plotly1 %>%
-    #   style(text = paste0(year_select_zh()$Name,"</br></br>",
-    #                       "Metric1: ",index1(year_select_zh()),"</br>",
-    #                       "Metric2: ", index2(year_select_zh()), traces = 1))
+        y = index2(data222),
+        x = index1(data222),
+        color='red',size=4
+      )+
+      labs(x=names(index1(year_select_zh()%>%filter(Name==input$county_zh))),
+           y=names(index2(year_select_zh()%>%filter(Name==input$county_zh))))
     
-    plotly111 %>%
-      style(text = paste0(data111,"</br></br>",
-                          "Metric1: ",index1(data111),"</br>",
-                          "Metric2: ", index2(data111), traces = 1))
+    plotly1 <- ggplotly(p1_zh)
+    
+    plotly1 %>%
+      style(text = paste0(data111$Name,"</br></br>",
+                          "( ",round(index1(data111),4), ", ",
+                          round(index2(data111),4)," )"
+                          ), 
+            traces = 1
+            ) %>% 
+      style(text = paste0(data222$Name,"</br></br>",
+                          "( ",round(index1(data222),4), ", ",
+                          round(index2(data222),4)," )"
+                          ),
+            traces = 2
+            )
   })
   
   output$table1_zh<-DT::renderDataTable({
@@ -414,13 +420,12 @@ serever <- function(input, output, session){
   output$barplot2_zh <- renderPlotly({
     p2_zh <- ggplot(county_select_zh())+theme_light()+
       geom_point(aes(x=Year, y=index(county_select_zh())))+
-      geom_line(aes(x=Year, y=index(county_select_zh())),group=1)+labs(x="Year",y="Metric")
+      geom_line(aes(x=Year, y=index(county_select_zh())),group=1)+labs(x="Year",y=input$metrics_zh)
    
     plotly2<-ggplotly(p2_zh)
     
     plotly2%>%
-      style(text = paste0("Year: ",county_select_zh()$Year, "</br></br>", 
-                          "Metric: ",index(county_select_zh())), traces = 1) 
+      style(text = round(index(county_select_zh()), 4),traces = 1) 
   })
   
   output$table2_zh<-DT::renderDataTable({
@@ -451,11 +456,6 @@ serever <- function(input, output, session){
     base_metric_select_vk() %>% filter(Metric == input$metric_vk)
   })
   
-  observeEvent(input$metric_vk, {
-    choice <- metric_select_vk()$Year %>% unique() 
-    updateSelectInput(session, "year_vk", choices=c(choice))
-  })
-  
   data_select_vk <- reactive({
     metric_select_vk() %>% 
       group_by(Year, State) %>% 
@@ -463,42 +463,47 @@ serever <- function(input, output, session){
       pivot_wider(names_from = Year, values_from = Value)
   })
   
+  
   year_sort_vk <- reactive({
     dt<-data_select_vk()
     temp_name<-colnames(dt)
     n <- dim(dt)[2]
     colnames(dt)[n]<-"use_this_sort"
     if(input$sort_vk == "ascending"){
-      dt<-dt %>% arrange(use_this_sort) %>% 
+      dt<-dt %>% 
+        arrange(use_this_sort) %>% 
         mutate(State = factor(State, levels = fct_reorder(State, use_this_sort, .desc = FALSE)))
     }
     else if(input$sort_vk == "descending"){
       dt<-dt %>% 
-        arrange(desc(use_this_sort)) %>%
+        arrange(desc(use_this_sort)) %>% 
         mutate(State = factor(State, levels = fct_reorder(State, use_this_sort, .desc = TRUE)))
     }
-    
-    dt <- dt[1:input$top_n_vk,]
+    dt <- dt[1:min(max(input$top_n_vk,1),40),]
     colnames(dt)<-temp_name
     dt
   })
   
   
   output$year_change_plot_states_vk <- renderPlotly({
-    dt<-year_sort_vk()
+    dt <- year_sort_vk()
     n <- dim(dt)[2]
-    temp_name<-colnames(dt)
-    colnames(dt)[2:n]<-c(2:n)
-    p <- dt %>% 
+    temp_name <- colnames(dt)
+    colnames(dt)[2:n] <- c(2:n)
+    p222 <- dt %>% 
       pivot_longer(2:n) %>% 
       mutate(name = as.numeric(name)) %>% 
-      ggplot()+ 
-      geom_line(aes(x=name, y=value, color = State))
-    ggplotly(p)
+      ggplot(aes(x=name, y=value, color = State))+ 
+      geom_line() + 
+      geom_point() + 
+      scale_x_continuous(breaks = 2:n, labels = temp_name[2:n]) + 
+      xlab("year") + 
+      ylab(input$metric_vk)
+    ggplotly(p222)
   })
   
   output$year_change_data_states_vk <- DT::renderDataTable({
-    DT::datatable(year_sort_vk())
+    year_sort_vk()
   })
   
   output$downloadid_vk <- downloadHandler(
@@ -510,71 +515,69 @@ serever <- function(input, output, session){
     }
   )
   
-  ##############
+  
   base_metric_select2_vk <- reactive({
-    counties_new %>% 
-      filter(base_metric == input$base_metric2_vk)
+    counties_new %>% filter(base_metric == input$base_metric2_vk)
   })
   
   observeEvent(input$base_metric2_vk, {
-    choice <- base_metric_select2_vk() %>% 
-      select(Metric) %>% 
-      unique() 
+    choice <- base_metric_select2_vk() %>% select(Metric) %>% unique() 
     updateSelectInput(session, "metric2_vk", choices=c(choice))
   })
   
   metric_select2_vk <- reactive({
     base_metric_select2_vk() %>% 
-      filter(Metric == input$metric2_vk)
-  })
-  
-  observeEvent(input$metric2_vk, {
-    choice <- metric_select2_vk()$Year %>% 
-      unique() 
-    updateSelectInput(session, "year2_vk", choices=c(choice))
+      filter(Metric == input$metric2_vk) %>% 
+      filter(State == input$state2_vk)
   })
   
   data_select2_vk <- reactive({
     metric_select2_vk() %>% 
       group_by(Year, Name) %>% 
-      summarise(Value = mean(Value, na.rm = TRUE)) %>%
+      summarise(Value = mean(Value, na.rm = TRUE)) %>% 
       pivot_wider(names_from = Year, values_from = Value)
   })
   
   
   year_sort2_vk <- reactive({
-    dt<-data_select2_vk()
-    temp_name<-colnames(dt)
+    dt <- data_select2_vk()
+    temp_name <- colnames(dt)
     n <- dim(dt)[2]
-    colnames(dt)[n]<-"use_this_sort"
+    colnames(dt)[n] <- "use_this_sort"
     if(input$sort2_vk == "ascending"){
-      dt<-dt %>% arrange(use_this_sort) %>% 
+      dt <- dt %>% arrange(use_this_sort) %>% 
         mutate(Name = factor(Name, levels = fct_reorder(Name, use_this_sort, .desc = FALSE)))
     }
     else if(input$sort2_vk == "descending"){
-      dt<-dt %>% 
-        arrange(desc(use_this_sort)) %>% 
+      dt <- dt %>% arrange(desc(use_this_sort)) %>% 
         mutate(Name = factor(Name, levels = fct_reorder(Name, use_this_sort, .desc = TRUE)))
     }
-    dt <- dt[1:input$top_n2_vk,]
+    dt <- dt[1:min(max(input$top_n2_vk,1),40),]
     colnames(dt)<-temp_name
     dt
   })
   
-  output$year_change_plot_counties_vk<- renderPlotly({
-    dt<-year_sort2_vk()
+  
+  output$year_change_plot_counties_vk <- renderPlotly({
+    dt <- year_sort2_vk()
     n <- dim(dt)[2]
-    temp_name<-colnames(dt)
-    colnames(dt)[2:n]<-c(2:n)
-    p <- dt %>% pivot_longer(2:n) %>% 
+    temp_name <- colnames(dt)
+    colnames(dt)[2:n] <- c(2:n)
+    p111 <- dt %>% 
+      pivot_longer(2:n) %>% 
       mutate(name = as.numeric(name)) %>% 
-      ggplot()+ 
-      geom_line(aes(x=name, y=value, color = Name))
-    ggplotly(p)
+      ggplot(aes(x=name, y=value, color = Name))+ 
+      geom_line() + 
+      geom_point() + 
+      scale_x_continuous(breaks = 2:n, 
+                         labels = temp_name[2:n]) + 
+      xlab("year") + 
+      ylab(input$metric2_vk)
+    ggplotly(p111)
   })
   
   output$year_change_data_counties_vk <- DT::renderDataTable({
-    DT::datatable(year_sort2_vk())
+    year_sort2_vk()
   })
   
   output$downloadid2_vk <- downloadHandler(
