@@ -1,5 +1,5 @@
 # Header
-header <- dashboardHeader(title='Project_2 Group_7')
+header <- dashboardHeader(title='Prject2 GROUP7')
 
 
 # Sidebar
@@ -19,7 +19,7 @@ sidebar <- dashboardSidebar(
                          tabName = 'county_map'
              )
     ),
-    menuItem('Comparison Stats', 
+    menuItem('Compare States/Counties', 
              tabName = 'stats', 
              icon = icon("chart-line"), 
              menuSubItem('By State', 
@@ -29,7 +29,7 @@ sidebar <- dashboardSidebar(
                          tabName = 'comparison_county_stats'
              ) 
     ), 
-    menuItem('Specific Stats', 
+    menuItem('Analyze a States/Counties', 
              tabName = 'stats', 
              icon = icon("chart-line"), 
              menuSubItem('By State', 
@@ -143,85 +143,51 @@ body <- dashboardBody(
             )
     ),
     # Comparison Stats
-    tabItem(tabName = 'comparison_state_stats', 
-      fluidRow(
-        tabBox(title = "", 
-               # The id lets us use input$tabset1 on the server to find the current tab
-               id = "tabset1", height = "300px", width = 9,
-               tabPanel("Plot", plotlyOutput("year_change_plot_states_vk")
-               ),
-               tabPanel("Data", DT::dataTableOutput("year_change_data_states_vk"), 
-                        downloadButton("downloadid_vk", "Download data")
-               )
-        ),
-        box(width = 3, status='info',
-            selectInput("base_metric_vk", 
-                        "Choose a Category:",
-                        choices = basemetric_choice, 
-                        selected = basemetric_choice[1]
-                        ),
-            selectInput("metric_vk", 
-                        "Choose a Metric", 
-                        choices = "Population"
-                        ),
-            selectInput("year_vk", 
-                        "Please choose a year:",
-                        choices = "Population"
-                        ),
-            numericInput("top_n_vk", 
-                        "Top_n:",
-                        value = 5, 
-                        min = 1, 
-                        max = 20),
-            radioButtons(inputId = "sort_vk", 
-                         label = "Variable:",
-                         choices = c("Ascending" = "ascending", "Descending" = "descending")
-                         )
-        )
-      )
+    tabItem(tabName = "comparison_state_stats", 
+            fluidRow(
+              tabBox(title = "",
+                     # The id lets us use input$tabset1 on the server to find the current tab
+                     id = "tabset1", height = "300px", width = 9,
+                     tabPanel("Plot", plotlyOutput("year_change_plot_states_vk")),
+                     tabPanel("Data", DT::dataTableOutput("year_change_data_states_vk"), 
+                              downloadButton("downloadid_vk", "Download data"))
+              ),
+              box(width = 3, status='info',
+                  selectInput("base_metric_vk", "Category:",
+                              choices = basemetric_choice, selected = basemetric_choice[1]),
+                  selectInput("metric_vk", "Metric", choices = "Population"),
+                  radioButtons(inputId = "sort_vk", label = "Variable:",
+                               choices = c("Top" = "descending", "Bottom" = "ascending")),
+                  numericInput("top_n_vk", "Number of States:",
+                               min = 1, max = 52, value = 5)
+              )
+            )
     ),
-    tabItem(tabName = 'comparison_county_stats', 
-      fluidRow(
-        tabBox(title = "",  
-               # The id lets us use input$tabset1 on the server to find the current tab
-               id = "tabset1", height = "300px", width = 9,
-               tabPanel("Plot",
-                        plotlyOutput("year_change_plot_counties_vk")
-               ),
-               tabPanel("Data",
-                        DT::dataTableOutput("year_change_data_counties_vk")
-               ),
-               downloadButton("downloadid2_vk", "Download data")
-        ), 
-        box(width = 3, status='info',
-            selectInput("base_metric2_vk", 
-                        "Choose a Category:",
-                        choices = basemetric_choice, selected = basemetric_choice[1]
-                        ),
-            selectInput("metric2_vk", 
-                        "Choose a Metric", 
-                        choices = "Population"
-                        ),
-            selectInput("year2_vk", 
-                        "Please choose a year:", 
-                        choices = "Population"
-                        ),
-            numericInput("top_n2_vk", 
-                          "Top_n:",
-                          value = 5, 
-                          min = 1, 
-                          max = 20),
-            radioButtons(inputId = "sort2_vk", 
-                         label = "Variable:",
-                         choices = c("Ascending" = "ascending", "Descending" = "descending")
-                         )
-        )
-      )
+    ##########
+    tabItem(tabName = "comparison_county_stats", 
+            fluidRow(
+              tabBox(title = "",
+                     # The id lets us use input$tabset1 on the server to find the current tab
+                     id = "tabset1", height = "300px", width = 9,
+                     tabPanel("Plot", plotlyOutput("year_change_plot_counties_vk")),
+                     tabPanel("Data", DT::dataTableOutput("year_change_data_counties_vk"), 
+                              downloadButton("downloadid2_vk", "Download data"))
+              ),
+              box(width = 3, status='info',
+                  selectInput("base_metric2_vk", "Category:",
+                              choices = basemetric_choice, selected = basemetric_choice[1]),
+                  selectInput("metric2_vk", "Metric", choices = "Population"),
+                  selectInput("state2_vk", "State", choices = state_choice),
+                  radioButtons(inputId = "sort2_vk", label = "Variable:",
+                               choices = c("Top" = "descending", "Bottom" = "ascending")),
+                  numericInput("top_n2_vk", "Number of counties:", value = 5, min = 1, max = 30)
+              )
+            )
     ),
     # Specific Stats
     tabItem(tabName="specific_state_stats",
             fluidRow(
-              tabBox(id=' ', width =9, title=" ", #status = 'primary',
+              tabBox(id=' ', width = 9, title=" ", #status = 'primary',
                      tabPanel('Plot', 
                               plotlyOutput("barplot1_zh")
                               ),
@@ -259,7 +225,7 @@ body <- dashboardBody(
     ),
     tabItem(tabName="specific_county_stats",
             fluidRow(
-              tabBox(id=' ', width =9, title=" ",
+              tabBox(id=' ', width = 9, title=" ",
                      tabPanel('Plot', 
                               plotlyOutput("barplot2_zh")
                      ),
