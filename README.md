@@ -1,36 +1,26 @@
 # Project 2: Shiny App Development Version 2.0
 
-### [Project Description](doc/project2_desc.md)
+## State and County Economic Data
+Term: Spring 2020
 
-![screenshot](doc/screenshot2.png)
++ **State and County Economic Data**
++ Team #7
++ Team members:
+	+ Zidi Hong
+	+ Yuqiao Liu
+	+ Michael Petkun
+	+ Vikki Sui
+	+ Jinxu Xiang
 
-In this second project of GR5243 Applied Data Science, we develop a version 2.0 of an *Exploratory Data Analysis and Visualization* shiny app on a topic of your choice using [NYC Open Data](https://opendata.cityofnewyork.us/) or U.S. government open data released on the [data.gov](https://data.gov/) website. See [Project 2 Description](doc/project2_desc.md) for more details.  
++ **Project summary**: The United States is a nation of wide geographic and economic diversity. While high-level statistics may illustrate broad patterns in the country's well-being, one must explore trends on a more granular level to truly understand regional economic health. With that in mind, this app is a tool for real estate developers and investors who are looking for areas that are ripe for investment. For example, a developer of luxury buildings may envision opportunities in counties with high income levels and a growing population. A speculative investor, on the other hand, may seek undervalued investments in areas with high, but falling, unemployment or poverty rates. This app gives users the tools to discover these opportunities by identifying and further examining states and counties that exhibit certain characteristics from a wide array of economic data.
 
-The **learning goals** for this project is:
-
-- business intelligence for data science
-- study legacy codes and further development
-- data cleaning
-- data visualization
-- systems development/design life cycle
-- shiny app/shiny server
-
-*The above general statement about project 2 can be removed once you are finished with your project. It is optional.
-
-## Project Title Lorem ipsum dolor sit amet
-Term: Fall 2019
-
-+ Team #
-+ **Projec title**: + Team members
-	+ team member 1
-	+ team member 2
-	+ team member 3
-	+ team member 4
-	+ team member 5
-
-+ **Project summary**: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-+ **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
++ **Contribution statement**: All team members contributed equally to this project, with the following areas of focus:
+	+ Zidi Hong was the lead developer of the "Specific Stats" tab.
+	+ Yuqiao Liu was the lead developer of the "State Map" tab.
+	+ Michael Petkun originated the idea for the app and most of the analysis, performed data processing, and wrote the "Home" and "Reference" tabs.
+	+ Vikki Sui was the lead developer of the "Comparison Stats" tab.
+	+ Jinxu Xiang was the lead developer of the "County Map" tab.
+	+ All team members approve our work presented in this GitHub repository, including this contribution statement. 
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
@@ -44,5 +34,3 @@ proj/
 ```
 
 Please see each subfolder for a README file.
-
-## 1111111111111111111111111111111111111111111111111111111
