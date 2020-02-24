@@ -317,18 +317,32 @@ serever <- function(input, output, session){
 ###output
   
   output$barplot1_zh <- renderPlotly({
-    p1_zh <- ggplot(year_select_zh(),aes(x=index1(year_select_zh()), y=index2(year_select_zh())))+
-      geom_point()+
-      geom_point(aes(y = index2(year_select_zh()%>%filter(Name==input$county_zh)),
-                     x= index1(year_select_zh()%>%filter(Name==input$county_zh))),
-                 color='red',size=4)+
+    data111 <- year_select_zh() %>% filter(Name != input$county_zh)
+    data222 <- year_select_zh() %>% filter(Name == input$county_zh)
+    p1_zh <- ggplot(data111)+
+      geom_point(
+        aes(y = index2(data111),
+            x = index1(data111))
+      )+
+      geom_point(
+        aes(y = index2(data222),
+            x = index1(data222)),
+            color='red',size=4
+            )+
       labs(x="First Metric",y="Second Metric")+theme_light()
       
     plotly1 <- ggplotly(p1_zh)
+    # plotly1 %>%
+    #   style(text = paste0(year_select_zh()$Name,"</br></br>",
+    #                       "Metric1: ",index1(year_select_zh()),"</br>",
+    #                       "Metric2: ", index2(year_select_zh()), traces = 1))
     plotly1 %>%
-      style(text = paste0( year_select_zh()$Name,"</br></br>",
-                          "Metric1: ",index1(year_select_zh()),"</br>",
-                          "Metric2: ", index2(year_select_zh()), traces = 1))
+      style(text = paste0(data111$Name,"</br></br>",
+                          "Metric1: ",index1(data111),"</br>",
+                          "Metric2: ", index2(data111), traces = 1)) %>% 
+      style(text = paste0(data222$Name,"</br></br>",
+                          "Metric1: ",index1(data222),"</br>",
+                          "Metric2: ", index2(data222), traces = 1))
   })
   
   output$table1_zh<-DT::renderDataTable({
