@@ -67,12 +67,14 @@ county_map_xjx <- function(df){
     labels <- sprintf(
       "<strong>%s, %s </strong><br/><strong>%s<br/>in %s</strong><br/>%g%s",    
       state, df$Name, metric, year, signif(values,4), end_label)
-  else
+  else if(chs == 2)
     labels <- sprintf(
       "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%g%s",    
       state, df$Name, metric, year, signif(values,4), end_label)
-  if(chs == 3)
-    labels <- paste0(labels, '%')
+  else
+    labels <- sprintf(
+      "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%g%%",    
+      state, df$Name, metric, year, signif(values,4))
   labels = labels%>% 
     lapply(htmltools::HTML)
   
