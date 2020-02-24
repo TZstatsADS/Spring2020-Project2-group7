@@ -36,6 +36,7 @@ df_name = tibble(abb = df_name)
 abb_name = tibble(abb = state.abb, name = state.name)
 df_join = full_join(df_name, abb_name, by = 'abb')
 df_join[9,2] = 'Washington D.C.'
+df_join[52,2] = 'Puerto Rico'
 
 df = left_join(df, df_join, by = c('State' = 'abb')) %>% 
   select(FIPS, State = name, Name, Metric, Year, Value, base_metric)
