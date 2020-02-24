@@ -120,7 +120,7 @@ server <- function(input, output, session) {
     n <- dim(dt)[2]
     temp_name<-colnames(dt)
     colnames(dt)[2:n]<-c(2:n)
-    dt %>% pivot_longer(2:n) %>% mutate(name = as.numeric(name)) %>% ggplot(aes(x=name, y=value, color = State))+ geom_line() + geom_point() + scale_x_continuous(breaks = 2:n, labels = temp_name[2:n])
+    dt %>% pivot_longer(2:n) %>% mutate(name = as.numeric(name)) %>% ggplot(aes(x=name, y=value, color = State))+ geom_line() + geom_point() + scale_x_continuous(breaks = 2:n, labels = temp_name[2:n]) + xlab("year") + ylab(input$metric_vk)
   })
   
   output$year_change_data_states_vk <- DT::renderDataTable({
@@ -177,11 +177,11 @@ server <- function(input, output, session) {
     n <- dim(dt)[2]
     temp_name<-colnames(dt)
     colnames(dt)[2:n]<-c(2:n)
-    dt %>% pivot_longer(2:n) %>% mutate(name = as.numeric(name)) %>% ggplot(aes(x=name, y=value, color = Name))+ geom_line() + geom_point() + scale_x_continuous(breaks = 2:n, labels = temp_name[2:n])
+    dt %>% pivot_longer(2:n) %>% mutate(name = as.numeric(name)) %>% ggplot(aes(x=name, y=value, color = Name))+ geom_line() + geom_point() + scale_x_continuous(breaks = 2:n, labels = temp_name[2:n]) + xlab("year") + ylab(input$metric2_vk)
   })
   
   output$year_change_data_counties_vk <- DT::renderDataTable({
-    DT::datatable(year_sort2_vk())
+    DT::datatable(year_sort2_vk(),options = list(autoWidth = TRUE))
 })
   
   output$downloadid2_vk <- downloadHandler(
