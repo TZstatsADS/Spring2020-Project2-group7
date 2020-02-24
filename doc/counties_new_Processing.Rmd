@@ -1,0 +1,37 @@
+---
+title: "counties_new_Processing"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+load("../output/counties.RData")
+Edu <-c("% of adults with less than a high school diploma", 
+        "% of adults with a high school diploma only", 
+        "% of adults completing some college",
+        "% of adults with a bachelor's degree or higher")
+Popu <- c("Population",
+          "Natural population increase rate", 
+          "Birth rate", 
+          "Death rate",
+          "Net migration rate")
+Emplo <- c("Civilian Labor Force", 
+           "Unemployment Rate")
+Pover <- c("Median Household Income", 
+           "% of people age 0-17 in poverty",
+           "% of people in poverty")
+
+df<-counties %>% mutate(base_metric = "NA")
+
+df = df %>% mutate(base_metric = ifelse(Metric %in% Edu, "Education", base_metric)) %>%
+  mutate(base_metric = ifelse(Metric %in% Popu, "Population", base_metric)) %>%
+  mutate(base_metric = ifelse(Metric %in% Emplo, "Employment", base_metric)) %>%
+  mutate(base_metric = ifelse(Metric %in% Pover, "Poverty", base_metric)) 
+
+counties_new <- df
+save(counties_new, file="../app/counties_new.RData")
+```
+
