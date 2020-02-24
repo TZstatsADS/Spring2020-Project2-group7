@@ -31,6 +31,15 @@ df = df %>% mutate(base_metric = ifelse(Metric %in% Edu, "Education", base_metri
   mutate(base_metric = ifelse(Metric %in% Emplo, "Employment", base_metric)) %>%
   mutate(base_metric = ifelse(Metric %in% Pover, "Poverty", base_metric)) 
 
+df_name = df %>% select(State) %>% unique() %>% c() %>% with(State)
+df_name = tibble(abb = df_name)
+abb_name = tibble(abb = state.abb, name = state.name)
+df_join = full_join(df_name, abb_name, by = 'abb')
+df_join[9,2] = 'Washington D.C.'
+
+df = left_join(df, df_join, by = c('State' = 'abb')) %>% 
+  select(FIPS, State = name, Name, Metric, Year, Value, base_metric)
+
 counties_new <- df
 save(counties_new, file="../app/counties_new.RData")
 ```
