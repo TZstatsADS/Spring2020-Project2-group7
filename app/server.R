@@ -421,7 +421,130 @@ serever <- function(input, output, session){
     }
   )
 ##############################################################################################  
- 
+## comparison stats
+## Vikki Sui
+  base_metric_select_vk <- reactive({
+    counties_new %>% filter(base_metric == input$base_metric_vk)
+  })
+  
+  observeEvent(input$base_metric_vk, {
+    choice <- base_metric_select_vk()$Metric %>% unique() 
+    updateSelectInput(session, "metric_vk", choices=c(choice))
+  })
+  
+  metric_select_vk <- reactive({
+    base_metric_select_vk() %>% filter(Metric == input$metric_vk)
+  })
+  
+  observeEvent(input$metric_vk, {
+    choice <- metric_select_vk()$Year %>% unique() 
+    updateSelectInput(session, "year_vk", choices=c(choice))
+  })
+  
+  data_select_vk <- reactive({
+    metric_select_vk() %>% group_by(Year, State) %>% summarise(Value = mean(Value, na.rm = TRUE)) %>% pivot_wider(names_from = Year, values_from = Value)
+  })
+  
+  
+  year_sort_vk <- reactive({
+    dt<-data_select_vk()
+    temp_name<-colnames(dt)
+    n <- dim(dt)[2]
+    colnames(dt)[n]<-"use_this_sort"
+    if(input$sort_vk == "ascending"){
+      dt<-dt %>% arrange(use_this_sort) %>% mutate(State = factor(State, levels = fct_reorder(State, use_this_sort, .desc = FALSE)))
+    }
+    else if(input$sort_vk == "descending"){
+      dt<-dt %>% arrange(desc(use_this_sort)) %>% mutate(State = factor(State, levels = fct_reorder(State, use_this_sort, .desc = TRUE)))
+    }
+    dt <- dt[1:input$top_n_vk,]
+    colnames(dt)<-temp_name
+    dt
+  })
+  
+  
+  output$year_change_plot_states_vk<- renderPlot({
+    dt<-year_sort_vk()
+    n <- dim(dt)[2]
+    temp_name<-colnames(dt)
+    colnames(dt)[2:n]<-c(2:n)
+    dt %>% pivot_longer(2:n) %>% mutate(name = as.numeric(name)) %>% ggplot()+ geom_line(aes(x=name, y=value, color = State))
+  })
+  
+  output$year_change_data_states_vk <- DT::renderDataTable({
+    DT::datatable(year_sort_vk())
+  })
+  
+  output$downloadid_vk <- downloadHandler(
+    filename = function() {
+      paste('data-', Sys.Date(), '.csv', sep='')
+    },
+    content = function(con) {
+      write.csv(year_sort_vk(), con)
+    }
+  )
+  
+  ##############
+  base_metric_select2_vk <- reactive({
+    counties_new %>% filter(base_metric == input$base_metric2_vk)
+  })
+  
+  observeEvent(input$base_metric2_vk, {
+    choice <- base_metric_select2_vk() %>% select(Metric) %>% unique() 
+    updateSelectInput(session, "metric2_vk", choices=c(choice))
+  })
+  
+  metric_select2_vk <- reactive({
+    base_metric_select2_vk() %>% filter(Metric == input$metric2_vk)
+  })
+  
+  observeEvent(input$metric2_vk, {
+    choice <- metric_select2_vk()$Year %>% unique() 
+    updateSelectInput(session, "year2_vk", choices=c(choice))
+  })
+  
+  data_select2_vk <- reactive({
+    metric_select2_vk() %>% group_by(Year, Name) %>% summarise(Value = mean(Value, na.rm = TRUE)) %>% pivot_wider(names_from = Year, values_from = Value)
+  })
+  
+  
+  year_sort2_vk <- reactive({
+    dt<-data_select2_vk()
+    temp_name<-colnames(dt)
+    n <- dim(dt)[2]
+    colnames(dt)[n]<-"use_this_sort"
+    if(input$sort2_vk == "ascending"){
+      dt<-dt %>% arrange(use_this_sort) %>% mutate(Name = factor(Name, levels = fct_reorder(Name, use_this_sort, .desc = FALSE)))
+    }
+    else if(input$sort2_vk == "descending"){
+      dt<-dt %>% arrange(desc(use_this_sort)) %>% mutate(Name = factor(Name, levels = fct_reorder(Name, use_this_sort, .desc = TRUE)))
+    }
+    dt <- dt[1:input$top_n2_vk,]
+    colnames(dt)<-temp_name
+    dt
+  })
+  
+  
+  output$year_change_plot_counties_vk<- renderPlot({
+    dt<-year_sort2_vk()
+    n <- dim(dt)[2]
+    temp_name<-colnames(dt)
+    colnames(dt)[2:n]<-c(2:n)
+    dt %>% pivot_longer(2:n) %>% mutate(name = as.numeric(name)) %>% ggplot()+ geom_line(aes(x=name, y=value, color = Name))
+  })
+  
+  output$year_change_data_counties_vk <- DT::renderDataTable({
+    DT::datatable(year_sort2_vk())
+  })
+  
+  output$downloadid2_vk <- downloadHandler(
+    filename = function() {
+      paste('data-', Sys.Date(), '.csv', sep='')
+    },
+    content = function(con) {
+      write.csv(year_sort2_vk(), con)
+    }
+  )
 }
 
 
