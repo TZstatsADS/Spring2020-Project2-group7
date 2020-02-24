@@ -143,10 +143,50 @@ body <- dashboardBody(
     ),
     # Comparison Stats
     tabItem(tabName = 'comparison_state_stats', 
-            "code of comparison state stats"
+      fluidRow(
+        box(width = 9,
+            tabBox(title = "The output",
+                   # The id lets us use input$tabset1 on the server to find the current tab
+                   id = "tabset1", height = "300px", width = 12,
+                   tabPanel("Plot Output", plotOutput("year_change_plot_states_vk")),
+                   tabPanel("Data Output", DT::dataTableOutput("year_change_data_states_vk")),
+                   downloadButton("downloadid_vk", "Download data")
+            )
+        ),
+        box(width = 3, status='info',
+            selectInput("base_metric_vk", "Choose a Category:",
+                        choices = basemetric_choice, selected = basemetric_choice[1]),
+            selectInput("metric_vk", "Choose a Metric", choices = "Population"),
+            selectInput("year_vk", "Please choose a year:",
+                        choices = "Population"),
+            selectInput("top_n_vk", "Top_n:",
+                        choices = c(1:10), selected = 5),
+            radioButtons(inputId = "sort_vk", label = "Variable:",
+                         choices = c("Ascending" = "ascending", "Descending" = "descending"))
+        )
+      )
     ),
     tabItem(tabName = 'comparison_county_stats', 
-            "code of comparison county stats"
+      fluidRow(
+        box(width = 9,
+            tabBox(title = "The output",
+                   # The id lets us use input$tabset1 on the server to find the current tab
+                   id = "tabset1", height = "300px", width = 12,
+                   tabPanel("Plot Output", plotOutput("year_change_plot_counties_vk")),
+                   tabPanel("Data Output", DT::dataTableOutput("year_change_data_counties_vk")),
+                   downloadButton("downloadid2_vk", "Download data")
+            )
+        ),
+        box(width = 3, status='info',
+            selectInput("base_metric2_vk", "Choose a Category:",
+                        choices = basemetric_choice, selected = basemetric_choice[1]),
+            selectInput("metric2_vk", "Choose a Metric", choices = "Population"),
+            selectInput("year2_vk", "Please choose a year:", choices = "Population"),
+            selectInput("top_n2_vk", "Top_n:", choices = c(1:10), selected = 5),
+            radioButtons(inputId = "sort2_vk", label = "Variable:",
+                         choices = c("Ascending" = "ascending", "Descending" = "descending"))
+        )
+      )
     ),
     # Specific Stats
     tabItem(tabName="specific_state_stats",
