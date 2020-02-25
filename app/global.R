@@ -23,6 +23,26 @@ state_choise_xjx = state.abb
 names(state_choise_xjx) = state.name
 state_choise_xjx = c(state_choise_xjx[1],state_choise_xjx[3:10], state_choise_xjx[12:length(state_choise_xjx)])
 
+number_comma = function(s){
+  s = str_remove(s,' ')
+  doc = str_locate(s, '\\.')[1]
+  if(is.na(doc))
+    n = nchar(s)
+  else
+    n = doc-1
+  nc = nchar(s)
+  if(n <= 3)
+    return(s)
+  for(i in 1:(n-1)){
+    if(!i%%3){
+      nc = nc+1
+      s = paste0(substr(s,1,n-i), ',', substr(s, n-i+1, nc))
+    }
+  }
+  return(s)
+}
+
+
 county_map_xjx <- function(df){
   mapcounty <- maps::map("county", regions = state.name[which(state.abb == df$State[1])], fill = TRUE, plot = FALSE)
   names <- tibble(Name = mapcounty$names) %>% 
@@ -67,15 +87,15 @@ county_map_xjx <- function(df){
   if(chs == 1)
     labels <- sprintf(
       "<strong>%s, %s </strong><br/><strong>%s<br/>in %s</strong><br/>%s%s",    
-      state, df$Name, metric, year, as.character(signif(values,4)), end_label)
+      state, df$Name, metric, year, number_comma(as.character(signif(values,4))), end_label)
   else if(chs == 2)
     labels <- sprintf(
       "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%s%s",    
-      state, df$Name, metric, year, as.character(signif(values,4)), end_label)
+      state, df$Name, metric, year, number_comma(as.character(signif(values,4))), end_label)
   else
     labels <- sprintf(
       "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%s%%",    
-      state, df$Name, metric, year, as.character(signif(values,4)))
+      state, df$Name, metric, year, number_comma(as.character(signif(values,4))))
   labels = labels%>% 
     lapply(htmltools::HTML)
   
@@ -129,13 +149,13 @@ state_map <- function(df, input_metric, chs, start_year, end_year=NULL){
   if(chs != 'Snapshot'){
     labels <- sprintf(
       "<strong>%s<br/>%s<br/>From %s to %s</strong><br/>%s %s",
-      df$Name, input_metric, start_year, end_year, as.character(signif(df$Value,4)), unit) %>%
+      df$Name, input_metric, start_year, end_year, number_comma(as.character(signif(df$Value,4))), unit) %>%
       lapply(htmltools::HTML)
   }
   else{
     labels <- sprintf(
       "<strong>%s<br/>%s<br/>%s</strong><br/>%s %s",
-      df$Name, input_metric, start_year, as.character(signif(df$Value,4)), unit) %>%
+      df$Name, input_metric, start_year, number_comma(as.character(signif(df$Value,4))), unit) %>%
       lapply(htmltools::HTML)
   }
   
