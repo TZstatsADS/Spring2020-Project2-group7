@@ -66,16 +66,16 @@ county_map_xjx <- function(df){
   
   if(chs == 1)
     labels <- sprintf(
-      "<strong>%s, %s </strong><br/><strong>%s<br/>in %s</strong><br/>%g%s",    
-      state, df$Name, metric, year, signif(values,4), end_label)
+      "<strong>%s, %s </strong><br/><strong>%s<br/>in %s</strong><br/>%s%s",    
+      state, df$Name, metric, year, as.character(signif(values,4)), end_label)
   else if(chs == 2)
     labels <- sprintf(
-      "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%g%s",    
-      state, df$Name, metric, year, signif(values,4), end_label)
+      "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%s%s",    
+      state, df$Name, metric, year, as.character(signif(values,4)), end_label)
   else
     labels <- sprintf(
-      "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%g%%",    
-      state, df$Name, metric, year, signif(values,4))
+      "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%s%%",    
+      state, df$Name, metric, year, as.character(signif(values,4)))
   labels = labels%>% 
     lapply(htmltools::HTML)
   
@@ -128,14 +128,14 @@ state_map <- function(df, input_metric, chs, start_year, end_year=NULL){
   
   if(chs != 'Snapshot'){
     labels <- sprintf(
-      "<strong>%s<br/>%s<br/>From %s to %s</strong><br/>%.4g %s",
-      df$Name, input_metric, start_year, end_year, df$Value, unit) %>%
+      "<strong>%s<br/>%s<br/>From %s to %s</strong><br/>%s %s",
+      df$Name, input_metric, start_year, end_year, as.character(signif(df$Value,4)), unit) %>%
       lapply(htmltools::HTML)
   }
   else{
     labels <- sprintf(
-      "<strong>%s<br/>%s<br/>%s</strong><br/>%.4g %s",
-      df$Name, input_metric, start_year, df$Value, unit) %>%
+      "<strong>%s<br/>%s<br/>%s</strong><br/>%s %s",
+      df$Name, input_metric, start_year, as.character(signif(df$Value,4)), unit) %>%
       lapply(htmltools::HTML)
   }
   
