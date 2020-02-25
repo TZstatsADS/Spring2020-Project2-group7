@@ -1,5 +1,5 @@
 # Header
-header <- dashboardHeader(title='Prject2 GROUP7')
+header <- dashboardHeader(title='Project Group7')
 
 
 # Sidebar
@@ -74,8 +74,10 @@ body <- dashboardBody(
                        h2("Data"),
                        h4(strong("Education"), " data includes the % of adults with various levels of education"),
                        h4(strong("Unemployment"), " data includes the unemployment rate and the total civilian labor force"),
-                       h4(strong("Poverty"), " data includes the poverty rates for the entire population and for people ages 0-17, as well as median household income"),
-                       h4(strong("Population"), " data includes total population estimates, as well as rates of natural population changes (from births and deaths) and net migration")
+                       h4(strong("Poverty"), " data includes the poverty rates for the entire population and for people ages 0-17,"),
+                       h4("as well as median household income"),
+                       h4(strong("Population"), " data includes total population estimates, as well as rates of natural population"),
+                       h4("changes (from births and deaths) and net migration")
               )
             )
     ),
@@ -279,7 +281,7 @@ body <- dashboardBody(
 
 
 ui <- dashboardPage(
-  skin='blue',
+  skin='purple',
   header=header,
   sidebar=sidebar,
   body=body
