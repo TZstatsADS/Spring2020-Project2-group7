@@ -59,13 +59,14 @@ body <- dashboardBody(
   tabItems(
     # Home
     tabItem(tabName='Home',
-            fluidPage(
+            fluidPage( 
               img(src = 'https://www.wealthmanagement.com/sites/wealthmanagement.com/files/us-map-money.jpg',
                   style = 'position: absolute; opacity: 0.2'),
-              img(src = 'QR_code.png', 
-                  style = 'position: absolute; opacity: .8; right: 50px; bottom: 50px; width: 400px; height: 400px'),
               fluidRow(h1("State and County Economic Data"),
                        h4("By Zidi Hong, Yuqiao Liu, Michael Petkun, Vikki Sui, and Jinxu Xiang"),
+                       actionButton(inputId='QR', 
+                                    label = "QR", 
+                       ),
                        h2("Overview"),
                        h4("The United States is a nation of wide geographic and economic diversity. While high-level statistics may illustrate broad patterns in the country's well-being, one must explore trends on a more granular level to truly understand regional economic health."),
                        h4("With that in mind, this app is a tool for real estate developers and investors who are looking for areas that are ripe for investment. For example, a developer of luxury buildings may envision opportunities in counties with high income levels and a growing population. A speculative investor, on the other hand, may seek undervalued investments in areas with high, but falling, unemployment or poverty rates. This app gives users the tools to discover these opportunities by identifying and further examining states and counties that exhibit certain characteristics from a wide array of economic data."),
@@ -79,15 +80,15 @@ body <- dashboardBody(
                        h4(strong("Poverty"), " data includes the poverty rates for the entire population and for people ages 0-17,"),
                        h4("as well as median household income"),
                        h4(strong("Population"), " data includes total population estimates, as well as rates of natural population"),
-                       h4("changes (from births and deaths) and net migration")
-              )
+                       h4("changes (from births and deaths) and net migration"), 
+              ), 
             )
     ),
     # States map
     tabItem(tabName = 'state_map', 
             fluidRow(
               box(h3(strong('The State Map')), width=9, status='primary',
-                  leafletOutput('stmaps_lyq', height = 500),
+                  leafletOutput('stmaps_lyq', height = 500)
               ),
               box(status='info', width=3,
                   radioButtons(inputId = 'chs_lyq', 
