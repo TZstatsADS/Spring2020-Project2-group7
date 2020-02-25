@@ -9,7 +9,7 @@ library(RColorBrewer)
 library(ggplot2)
 library(plotly)
 library(scales)
-library(dplyr)
+library(shinyWidgets)
 #### County leaflet written by Jinxu Xiang
 
 load("Econ_county_map_modified.RData")
