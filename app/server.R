@@ -274,7 +274,15 @@ serever <- function(input, output, session){
       state_map(map_data, met, chs, s_year, e_year)
     }
     else state_map(map_data, met, chs, s_year)
-    
+  })
+  # QR
+  observeEvent(input$QR, {
+    sendSweetAlert(
+      session = session,
+      title = "Our ShinyWeb !!",
+      text = img(src = 'QR_code.png', style = 'width: 400px; height: 400px'), 
+      html = TRUE
+    )
   })
 ####################################################################################################
 
@@ -596,7 +604,7 @@ serever <- function(input, output, session){
                          labels = temp_name[2:n]) + 
       xlab("year") + 
       ylab(input$metric2_vk)
-    ggplotly(p222, tooltip=c('Name', prettyNum(signif('value', 4),big.mark=",",scientific=FALSE)))
+    ggplotly(p222, tooltip=c('Name', 'value'))
   })
   
   output$year_change_data_counties_vk <- DT::renderDataTable({
