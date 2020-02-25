@@ -23,26 +23,6 @@ state_choise_xjx = state.abb
 names(state_choise_xjx) = state.name
 state_choise_xjx = c(state_choise_xjx[1],state_choise_xjx[3:10], state_choise_xjx[12:length(state_choise_xjx)])
 
-number_comma = function(s){
-  s = str_remove(s,' ')
-  doc = str_locate(s, '\\.')[1]
-  if(is.na(doc))
-    n = nchar(s)
-  else
-    n = doc-1
-  nc = nchar(s)
-  if(n <= 3)
-    return(s)
-  for(i in 1:(n-1)){
-    if(!i%%3){
-      nc = nc+1
-      s = paste0(substr(s,1,n-i), ',', substr(s, n-i+1, nc))
-    }
-  }
-  return(s)
-}
-
-
 county_map_xjx <- function(df){
   mapcounty <- maps::map("county", regions = state.name[which(state.abb == df$State[1])], fill = TRUE, plot = FALSE)
   names <- tibble(Name = mapcounty$names) %>% 
