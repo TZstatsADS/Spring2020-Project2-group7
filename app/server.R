@@ -604,7 +604,7 @@ serever <- function(input, output, session){
                          labels = temp_name[2:n]) + 
       xlab("year") + 
       ylab(input$metric2_vk)
-    ggplotly(p222, tooltip=c('Name', 'value'))
+    ggplotly(p111, tooltip=c('Name', 'value'))
   })
   
   output$year_change_data_counties_vk <- DT::renderDataTable({
