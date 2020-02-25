@@ -267,7 +267,14 @@ serever <- function(input, output, session){
     chs <- input$chs_lyq
     map_data <- data_select_lyq()
     met <- input$metric_lyq
-    state_map(map_data, met, chs)
+    s_year <- input$year_lyq
+    
+    if(chs!='Snapshot'){
+      e_year <- input$end_year_lyq
+      state_map(map_data, met, chs, s_year, e_year)
+    }
+    else state_map(map_data, met, chs, s_year)
+    
   })
 ####################################################################################################
 
