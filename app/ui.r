@@ -62,6 +62,8 @@ body <- dashboardBody(
             fluidPage(
               img(src = 'https://www.wealthmanagement.com/sites/wealthmanagement.com/files/us-map-money.jpg',
                   style = 'position: absolute; opacity: 0.2'),
+              img(src = 'QR_code.png', 
+                  style = 'position: absolute; opacity: .8; right: 50px; bottom: 50px; width: 400px; height: 400px'),
               fluidRow(h1("State and County Economic Data"),
                        h4("By Zidi Hong, Yuqiao Liu, Michael Petkun, Vikki Sui, and Jinxu Xiang"),
                        h2("Overview"),
