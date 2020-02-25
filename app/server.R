@@ -315,7 +315,8 @@ serever <- function(input, output, session){
   
   year_select_zh <- reactive({
     metric_s() %>% 
-      filter(Year==input$year_zh)%>%drop_na()
+      filter(Year==input$year_zh) %>%
+      drop_na()
   })
   
   observeEvent(input$state_zh, {
@@ -345,16 +346,24 @@ serever <- function(input, output, session){
     
     plotly1 <- ggplotly(p1_zh)
     
+    value1111 <- prettyNum(signif(index1(data111), 4),big.mark=",",scientific=FALSE)
+    value1112 <- prettyNum(signif(index2(data111), 4),big.mark=",",scientific=FALSE)
+    value2221 <- prettyNum(signif(index1(data222), 4),big.mark=",",scientific=FALSE)
+    value2222 <- prettyNum(signif(index2(data222), 4),big.mark=",",scientific=FALSE)
+    
     plotly1 %>%
       style(text = paste0(data111$Name,"</br></br>",
-                          "( ",round(index1(data111),4), ", ",
-                          round(index2(data111),4)," )"
+                          "( ", 
+                          value1111, 
+                          ", ",
+                          value1112,
+                          " )"
                           ), 
             traces = 1
             ) %>% 
       style(text = paste0(data222$Name,"</br></br>",
-                          "( ",round(index1(data222),4), ", ",
-                          round(index2(data222),4)," )"
+                          "( ",value2221, ", ",
+                          value2222," )"
                           ),
             traces = 2
             )
@@ -432,8 +441,10 @@ serever <- function(input, output, session){
    
     plotly2<-ggplotly(p2_zh)
     
+    value111 <- prettyNum(signif(index(county_select_zh()), 4),big.mark=",",scientific=FALSE)
+ 
     plotly2%>%
-      style(text = round(index(county_select_zh()), 4),traces = 1) 
+      style(text = paste0(input$metrics_zh, '\n', value111), traces = 1) 
   })
   
   output$table2_zh<-DT::renderDataTable({
@@ -498,17 +509,19 @@ serever <- function(input, output, session){
     n <- dim(dt)[2]
     temp_name <- colnames(dt)
     colnames(dt)[2:n] <- c(2:n)
-    p222 <- dt %>% 
+    d222 <- dt %>% 
       pivot_longer(2:n) %>% 
-      mutate(name = as.numeric(name)) %>% 
+      mutate(name = as.numeric(name)) 
+    p222 <- d222 %>% 
       ggplot(aes(x=name, y=value, color = State))+ 
       geom_line() + 
       geom_point() + 
       scale_x_continuous(breaks = 2:n, labels = temp_name[2:n]) + 
       xlab("year") + 
       ylab(input$metric_vk)
-    ggplotly(p222, tooltip = c("State", "y"))
-  })
+    ggplotly(p222, tooltip=c('State', 'value'))
+})
+      
   
   output$year_change_data_states_vk <- DT::renderDataTable({
     year_sort_vk()
@@ -571,9 +584,11 @@ serever <- function(input, output, session){
     n <- dim(dt)[2]
     temp_name <- colnames(dt)
     colnames(dt)[2:n] <- c(2:n)
-    p111 <- dt %>% 
+    
+    d111 <- dt %>% 
       pivot_longer(2:n) %>% 
-      mutate(name = as.numeric(name)) %>% 
+      mutate(name = as.numeric(name)) 
+    p111 <- d111 %>% 
       ggplot(aes(x=name, y=value, color = Name))+ 
       geom_line() + 
       geom_point() + 
@@ -581,7 +596,7 @@ serever <- function(input, output, session){
                          labels = temp_name[2:n]) + 
       xlab("year") + 
       ylab(input$metric2_vk)
-    ggplotly(p111, tooltip = c("Name", "y"))
+    ggplotly(p222, tooltip=c('Name', prettyNum(signif('value', 4),big.mark=",",scientific=FALSE)))
   })
   
   output$year_change_data_counties_vk <- DT::renderDataTable({
