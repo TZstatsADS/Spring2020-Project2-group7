@@ -122,13 +122,23 @@ names <- tibble(Name=str_to_upper(mapStates$names)) %>%
   separate(Name, c('Name', 'sub'), ':') %>% 
   select(Name)
 
-state_map <- function(df, input_metric, chs){
+state_map <- function(df, input_metric, chs, start_year, end_year=NULL){
   unit <- unit_lyq(input_metric, chs)
   pal <- colorBin("YlGnBu", domain = df$Value)
-  labels <- sprintf(
-    "<strong>%s<br/>%s</strong><br/>%.4g %s",
-    df$Name, input_metric, df$Value, unit) %>%
-    lapply(htmltools::HTML)
+  
+  if(chs != 'Snapshot'){
+    labels <- sprintf(
+      "<strong>%s<br/>%s<br/>From %s to %s</strong><br/>%.4g %s",
+      df$Name, input_metric, start_year, end_year, df$Value, unit) %>%
+      lapply(htmltools::HTML)
+  }
+  else{
+    labels <- sprintf(
+      "<strong>%s<br/>%s<br/>%s</strong><br/>%.4g %s",
+      df$Name, input_metric, start_year, df$Value, unit) %>%
+      lapply(htmltools::HTML)
+  }
+  
   
   #State Map
   leaflet(data = mapStates) %>%  
