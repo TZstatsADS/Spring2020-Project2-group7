@@ -87,15 +87,15 @@ county_map_xjx <- function(df){
   if(chs == 1)
     labels <- sprintf(
       "<strong>%s, %s </strong><br/><strong>%s<br/>in %s</strong><br/>%s%s",    
-      state, df$Name, metric, year, number_comma(as.character(signif(values,4))), end_label)
+      state, df$Name, metric, year, prettyNum(signif(values, 4),big.mark=",",scientific=FALSE), end_label)
   else if(chs == 2)
     labels <- sprintf(
       "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%s%s",    
-      state, df$Name, metric, year, number_comma(as.character(signif(values,4))), end_label)
+      state, df$Name, metric, year, prettyNum(signif(values, 4),big.mark=",",scientific=FALSE), end_label)
   else
     labels <- sprintf(
       "<strong>%s, %s </strong><br/><strong>%s<br/>from %s</strong><br/>%s%%",    
-      state, df$Name, metric, year, number_comma(as.character(signif(values,4))))
+      state, df$Name, metric, year, prettyNum(signif(values, 4),big.mark=",",scientific=FALSE))
   labels = labels%>% 
     lapply(htmltools::HTML)
   
@@ -149,13 +149,13 @@ state_map <- function(df, input_metric, chs, start_year, end_year=NULL){
   if(chs != 'Snapshot'){
     labels <- sprintf(
       "<strong>%s<br/>%s<br/>From %s to %s</strong><br/>%s %s",
-      df$Name, input_metric, start_year, end_year, number_comma(as.character(signif(df$Value,4))), unit) %>%
+      df$Name, input_metric, start_year, end_year, prettyNum(signif(df$Value, 4),big.mark=",",scientific=FALSE), unit) %>%
       lapply(htmltools::HTML)
   }
   else{
     labels <- sprintf(
       "<strong>%s<br/>%s<br/>%s</strong><br/>%s %s",
-      df$Name, input_metric, start_year, number_comma(as.character(signif(df$Value,4))), unit) %>%
+      df$Name, input_metric, start_year, prettyNum(signif(df$Value, 4), big.mark=",",scientific=FALSE), unit) %>%
       lapply(htmltools::HTML)
   }
   
