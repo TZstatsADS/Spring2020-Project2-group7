@@ -29,7 +29,7 @@ sidebar <- dashboardSidebar(
                          tabName = 'comparison_county_stats'
              ) 
     ), 
-    menuItem('Analyze a States/Counties', 
+    menuItem('Analyze a State/County', 
              tabName = 'stats', 
              icon = icon("chart-line"), 
              menuSubItem('By State', 
