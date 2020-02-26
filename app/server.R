@@ -149,6 +149,7 @@ serever <- function(input, output, session){
                               '2015', '2016', '2017', '2018')
       )
     }
+    
   })
   
   output$if_end_lyq <- renderUI(end_year_lyq())
@@ -168,8 +169,7 @@ serever <- function(input, output, session){
                         choices = c('Education', 'Employment', 'Population', 'Poverty'), 
                         selected = 'Population'
       )
-      
-      updateSelectInput(session, 'year_lyq')
+      updateSelectInput(session, 'year_lyq', label = 'Year')
     }
   })
   #
