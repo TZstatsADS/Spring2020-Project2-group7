@@ -45,17 +45,38 @@ sidebar <- dashboardSidebar(
              )
   )
 )
-  
-  
+
 # Body 
 body <- dashboardBody(
   tags$head(
-    tags$style(type="text/css",
-               ".shiny-output-error { visibility: hidden; }",
-               ".shiny-output-error:before { visibility: hidden; }"
+    tags$style(
+      type="text/css",
+      ".shiny-output-error { visibility: hidden; }",
+      ".shiny-output-error:before { visibility: hidden; }", 
+      HTML('h1 {font-weight: bold; 
+                font-family: impact}',
+           'h3 {font-style: italic;}',
+           # header color 
+           '.skin-black .main-header .navbar { background-color: #261c1c;}',
+           '.skin-black .main-header .navbar>.sidebar-toggle {color: white}', 
+           '.skin-black .main-header>.logo:hover {background-color: #ee0b0b;}', 
+           
+           '.skin-black .main-header>.logo {background-color: #261c1c; color: white;}', 
+           
+           
+           '.skin-black .main-sidebar {color:white; background-color: #45225c;}',
+           
+           # menu color 两个同时改
+           '.skin-black .main-sidebar .sidebar-menu {background-color: #6f289e;}',
+           '.skin-black .main-sidebar .treeview{background-color: #6f289e;}',
+           
+           #展开 menu color
+           '.skin-black .sidebar-menu>li>.treeview-menu {color: red; background-color: darkblue;}',
+           
+           '.skin-black .sidebar-menu>li:hover>a {color: red; background-color: white;}'
+           )
     )
   ),
-  
   tabItems(
     # Home
     tabItem(tabName='Home',
@@ -63,7 +84,7 @@ body <- dashboardBody(
               img(src = 'https://www.wealthmanagement.com/sites/wealthmanagement.com/files/us-map-money.jpg',
                   style = 'position: absolute; opacity: 0.2'),
               fluidRow(h1("State and County Economic Data"),
-                       h4("By Zidi Hong, Yuqiao Liu, Michael Petkun, Vikki Sui, and Jinxu Xiang"),
+                       h3("By Zidi Hong, Yuqiao Liu, Michael Petkun, Vikki Sui, and Jinxu Xiang"),
                        actionButton(inputId='QR', 
                                     label = "QR", 
                        ),
@@ -284,7 +305,7 @@ body <- dashboardBody(
 
 
 ui <- dashboardPage(
-  skin='purple',
+  skin='black',
   header=header,
   sidebar=sidebar,
   body=body
