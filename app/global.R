@@ -139,7 +139,7 @@ state_map <- function(df, input_metric, chs, start_year, end_year=NULL){
   unit <- unit_lyq(input_metric, chs)
   pal <- colorBin("YlGnBu", domain = df$Value)
   
-  if(chs != 'Snapshot'){
+  if(chs != 'Specific year'){
     labels <- sprintf(
       "<strong>%s<br/>%s<br/>From %s to %s</strong><br/>%s %s",
       df$Name, input_metric, start_year, end_year, prettyNum(signif(df$Value, 4),big.mark=",",scientific=FALSE), unit) %>%
