@@ -1,9 +1,11 @@
 # Project 2: Shiny App Development Version 2.0
 
-## State and County Economic Data
-Term: Spring 2020
+##Term: Spring 2020
+## Project 2 Group 7: A Socioeconomic Guide to the USA
 
-<img src="doc/figs/USA.png" width="500">
+<img src="doc/figs/States.jpg" width="500">
+
+### [Project Description](doc/)
 + **State and County Economic Data**
 + Team #7
 + Team members:
@@ -12,7 +14,9 @@ Term: Spring 2020
 	+ Michael Petkun
 	+ Vikki Sui
 	+ Jinxu Xiang
+
 + Shiny App URL:https://zh2404.shinyapps.io/Project2_Group7/
+
 + **Project summary**: The United States is a nation of wide geographic and economic diversity. While high-level statistics may illustrate broad patterns in the country's well-being, one must explore trends on a more granular level to truly understand regional economic health. With that in mind, this app is a tool for real estate developers and investors who are looking for areas that are ripe for investment. For example, a developer of luxury buildings may envision opportunities in counties with high income levels and a growing population. A speculative investor, on the other hand, may seek undervalued investments in areas with high, but falling, unemployment or poverty rates. This app gives users the tools to discover these opportunities by identifying and further examining states and counties that exhibit certain characteristics from a wide array of economic data.
 
 + **Contribution statement**: All team members contributed equally to this project, with the following areas of focus:
