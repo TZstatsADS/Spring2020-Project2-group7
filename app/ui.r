@@ -56,7 +56,7 @@ body <- dashboardBody(
       HTML('h1 {font-weight: bold; 
                 font-family: impact}',
            'h3 {font-style: italic;}',
-           # header color 
+          
            '.skin-black .main-header .navbar { background-color: #261c1c;}',
            '.skin-black .main-header .navbar>.sidebar-toggle {color: white}', 
            '.skin-black .main-header>.logo:hover {background-color: black;}', 
@@ -66,11 +66,11 @@ body <- dashboardBody(
            
            '.skin-black .main-sidebar {color:white; background-color: #45225c;}',
            
-           # menu color 两个同时改
+          
            '.skin-black .main-sidebar .sidebar-menu {background-color: #5a3573;}',
            '.skin-black .main-sidebar .treeview{background-color: #5a3573;}',
            
-           #展开 menu color
+        
            '.skin-black .sidebar-menu>li>.treeview-menu {color: black; background-color: #45225c;}',
            
            '.skin-black .sidebar-menu>li:hover>a {color: black; background-color: white;}'
