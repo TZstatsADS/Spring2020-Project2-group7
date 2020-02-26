@@ -169,7 +169,7 @@ serever <- function(input, output, session){
                         selected = 'Population'
       )
       
-      updateSelectInput(session, 'year_lyq')
+      updateSelectInput(session, 'year_lyq', label = "Year")
     }
   })
   #
