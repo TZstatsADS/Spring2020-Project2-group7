@@ -67,6 +67,9 @@ body <- dashboardBody(
            
            '.skin-black .main-sidebar .sidebar-menu {background-color: #5a3573;}',
            '.skin-black .main-sidebar .treeview{background-color: #5a3573;}',
+          
+           '.skin-black .main-sidebar .sidebar-menu {background-color: #5a3573;}',
+           '.skin-black .main-sidebar .treeview{background-color: #5a3573;}',
            
            '.skin-black .sidebar-menu>li>.treeview-menu {color: black; background-color: #45225c;}',
            
