@@ -168,7 +168,8 @@ serever <- function(input, output, session){
                         choices = c('Education', 'Employment', 'Population', 'Poverty'), 
                         selected = 'Population'
       )
-      updateSelectInput(session, 'year_lyq', label = 'Year')
+      
+      updateSelectInput(session, 'year_lyq')
     }
   })
   #
