@@ -1,7 +1,7 @@
-# Project 2: Shiny App Development Version 2.0
+# Project 2: Shiny App Development Version 2.0   
 
-##Term: Spring 2020
-## A Socioeconomic Guide to the USA
+##Term: Spring 2020   
+### A Socioeconomic Guide to the USA
 
 <img src="doc/figs/States.jpg" width="500">
 
