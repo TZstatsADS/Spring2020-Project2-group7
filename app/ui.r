@@ -176,7 +176,7 @@ body <- dashboardBody(
                      id = "tabset1", height = "300px", width = 10,
                      tabPanel("Plot", plotlyOutput("year_change_plot_states_vk")),
                      tabPanel("Data", DT::dataTableOutput("year_change_data_states_vk"), 
-                              downloadButton("downloadid_vk", "Download data"))
+                              downloadButton("downloadid_vk", "Download Data"))
               ),
               box(width = 2, status='info',
                   selectInput("base_metric_vk", "Category:",
@@ -197,7 +197,7 @@ body <- dashboardBody(
                      id = "tabset1", height = "300px", width = 10,
                      tabPanel("Plot", plotlyOutput("year_change_plot_counties_vk")),
                      tabPanel("Data", DT::dataTableOutput("year_change_data_counties_vk"), 
-                              downloadButton("downloadid2_vk", "Download data"))
+                              downloadButton("downloadid2_vk", "Download Data"))
               ),
               box(width = 2, status='info',
                   selectInput("base_metric2_vk", "Category:",
@@ -219,7 +219,7 @@ body <- dashboardBody(
                               ),
                      tabPanel('Data',  
                               DT::dataTableOutput("table1_zh"),
-                              downloadButton("downloadData1_zh", "Download")
+                              downloadButton("downloadData1_zh", "Download Data")
                               )
                      ),
               box(width = 2, status='info',
@@ -256,7 +256,7 @@ body <- dashboardBody(
                      ),
                      tabPanel('Data',  
                               DT::dataTableOutput("table2_zh"),
-                              downloadButton("downloadData2_zh", "Download")
+                              downloadButton("downloadData2_zh", "Download Data")
                               )
                      ),
               box(width = 2, status='info',
