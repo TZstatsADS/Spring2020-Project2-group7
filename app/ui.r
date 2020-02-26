@@ -66,11 +66,11 @@ body <- dashboardBody(
            
            '.skin-black .main-sidebar {color:white; background-color: #45225c;}',
            
-           # menu color 两个同时改
+           # change menu color 
            '.skin-black .main-sidebar .sidebar-menu {background-color: #5a3573;}',
            '.skin-black .main-sidebar .treeview{background-color: #5a3573;}',
            
-           #展开 menu color
+           #flat menu color
            '.skin-black .sidebar-menu>li>.treeview-menu {color: black; background-color: #45225c;}',
            
            '.skin-black .sidebar-menu>li:hover>a {color: black; background-color: white;}'
@@ -135,7 +135,7 @@ body <- dashboardBody(
               )
             )
     ),
-    # County map written by Jinxu Xiang
+    # County map 
     tabItem(tabName = 'county_map',
             fluidRow(
               box(h3(strong('The County Map')), width=9, status='primary',
