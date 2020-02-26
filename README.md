@@ -1,9 +1,9 @@
 # Project 2: Shiny App Development Version 2.0
 
-## State and County Economic Data
+## A Socioeconomic Guide to the USA
 Term: Spring 2020
 
-+ **State and County Economic Data**
++ **A Socioeconomic Guide to the USA**
 + Team #7
 + Team members:
 	+ Zidi Hong
