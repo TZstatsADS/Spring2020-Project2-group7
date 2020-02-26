@@ -83,7 +83,7 @@ body <- dashboardBody(
             fluidPage( 
               img(src = 'https://www.wealthmanagement.com/sites/wealthmanagement.com/files/us-map-money.jpg',
                   style = 'position: absolute; opacity: 0.2'),
-              fluidRow(h1("State and County Economic Data"),
+              fluidRow(h1("A Socioeconomic Guide to the USA"),
                        h3("By Zidi Hong, Yuqiao Liu, Michael Petkun, Vikki Sui, and Jinxu Xiang"),
                        actionButton(inputId='QR', 
                                     label = "QR", 
