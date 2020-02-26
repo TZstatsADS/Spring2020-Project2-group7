@@ -4,7 +4,7 @@ serever <- function(input, output, session){
 #################County map written by Jinxu Xiang 
   
   observeEvent(list(input$chs_xjx), {
-    if(input$chs_xjx!='Snapshot'){
+    if(input$chs_xjx!='Specific year'){
       updateSelectInput(session, 
                         'basic_metric_xjx', 
                         choices = c('Education', 'Employment', 'Population'), 
@@ -33,7 +33,7 @@ serever <- function(input, output, session){
   
   observeEvent(list(input$metric_xjx, input$chs_xjx), {
     year <- metric_select()$Year %>% unique()
-    if(input$chs_xjx == 'Snapshot'){
+    if(input$chs_xjx == 'Specific year'){
       updateSelectInput(session, 'year_xjx', choices=year, select = year[1])
     }
     else{
@@ -79,7 +79,7 @@ serever <- function(input, output, session){
   })
   
   end_year <- reactive({
-    if(input$chs_xjx!='Snapshot'){
+    if(input$chs_xjx!='Specific year'){
       e_year = e_year()
       selectInput(inputId = 'end_year_xjx',
                   label = 'End Year',
@@ -93,7 +93,7 @@ serever <- function(input, output, session){
   
   # By Year
   data_select <- reactive({
-    if(input$chs_xjx == 'Snapshot'){
+    if(input$chs_xjx == 'Specific year'){
       metric_select() %>% 
         filter(Year == input$year_xjx) %>%
         mutate(chs = 1)
@@ -142,7 +142,7 @@ serever <- function(input, output, session){
   
   # choose the type --> change UI
   end_year_lyq <- reactive({
-    if(input$chs_lyq!='Snapshot'){
+    if(input$chs_lyq!='Specific year'){
       selectInput(inputId = 'end_year_lyq',
                   label = 'End Year',
                   choices = c('2011', '2012', '2013', '2014', 
@@ -154,7 +154,7 @@ serever <- function(input, output, session){
   output$if_end_lyq <- renderUI(end_year_lyq())
   
   observeEvent(input$chs_lyq, {
-    if(input$chs_lyq!='Snapshot'){
+    if(input$chs_lyq!='Specific year'){
       updateSelectInput(session, 
                         'basic_metric_lyq', 
                         choices = c('Education', 'Employment', 'Population'), 
@@ -198,7 +198,7 @@ serever <- function(input, output, session){
                       'year_lyq', 
                       choices = year[1:length(year)], 
                       selected = year[1])
-    if(input$chs_lyq!='Snapshot'){
+    if(input$chs_lyq!='Specific year'){
       id <- match(input$year_lyq, year)
       updateSelectInput(session, 
                         'end_year_lyq', 
@@ -214,7 +214,7 @@ serever <- function(input, output, session){
   
   # Start Year changes --> End Year changes
   observeEvent(input$year_lyq, {
-    if(input$chs_lyq!='Snapshot'){
+    if(input$chs_lyq!='Specific year'){
       year <-   metric_select_lyq()$Year %>% unique()
       id <- match(input$year_lyq, year)
       choices <- year[-c(1:id)]
@@ -227,7 +227,7 @@ serever <- function(input, output, session){
   
   # Get the df of map
   data_select_lyq <- reactive({
-    if(input$chs_lyq!='Snapshot'){
+    if(input$chs_lyq!='Specific year'){
       dt <- 
         metric_select_lyq() %>%
         filter(Year==input$year_lyq | Year==input$end_year_lyq)
@@ -269,7 +269,7 @@ serever <- function(input, output, session){
     met <- input$metric_lyq
     s_year <- input$year_lyq
     
-    if(chs!='Snapshot'){
+    if(chs!='Specific year'){
       e_year <- input$end_year_lyq
       state_map(map_data, met, chs, s_year, e_year)
     }

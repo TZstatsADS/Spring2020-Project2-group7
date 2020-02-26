@@ -1,5 +1,5 @@
 # Header
-header <- dashboardHeader(title='Project Group7')
+header <- dashboardHeader(title='Project2 Group7')
 
 
 # Sidebar
@@ -114,8 +114,8 @@ body <- dashboardBody(
               box(status='info', width=3,
                   radioButtons(inputId = 'chs_lyq', 
                                label = 'Please Choose:', 
-                               choices = c('Snapshot', 'Changes by time', '%Change by time'), 
-                               selected = 'Snapshot'
+                               choices = c('Specific year', 'Changes by time', '%Change by time'), 
+                               selected = 'Specific year'
                   ),
                   selectInput(inputId = 'basic_metric_lyq', 
                               label = 'Category',
@@ -143,8 +143,8 @@ body <- dashboardBody(
               ),
               box(width = 3, status='info',
                   radioButtons(inputId = 'chs_xjx', label = 'Please Choose:', 
-                               choices = c('Snapshot', 'Changes by time', '%Change by time'), 
-                               selected = 'Snapshot'
+                               choices = c('Specific year', 'Changes by time', '%Change by time'), 
+                               selected = 'Specific year'
                   ),
                   selectInput(inputId = 'state_xjx', 
                               label = 'State',
