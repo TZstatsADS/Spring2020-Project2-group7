@@ -32,10 +32,10 @@ sidebar <- dashboardSidebar(
     menuItem('Analyze a States/Counties', 
              tabName = 'stats', 
              icon = icon("chart-line"), 
-             menuSubItem('By State', 
+             menuSubItem('State', 
                          tabName = 'specific_state_stats'
              ),
-             menuSubItem('By County', 
+             menuSubItem('County', 
                          tabName = 'specific_county_stats'
              ) 
     ),  
