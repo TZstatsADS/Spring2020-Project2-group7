@@ -1,5 +1,5 @@
 # Header
-header <- dashboardHeader(title='Project Group7')
+header <- dashboardHeader(title='Project2 Group7')
 
 
 # Sidebar
@@ -56,21 +56,18 @@ body <- dashboardBody(
       HTML('h1 {font-weight: bold; 
                 font-family: impact}',
            'h3 {font-style: italic;}',
-          
+           # header color 
            '.skin-black .main-header .navbar { background-color: #261c1c;}',
            '.skin-black .main-header .navbar>.sidebar-toggle {color: white}', 
            '.skin-black .main-header>.logo:hover {background-color: black;}', 
            
            '.skin-black .main-header>.logo {background-color: #261c1c; color: white;}', 
            
-           
            '.skin-black .main-sidebar {color:white; background-color: #45225c;}',
            
-          
            '.skin-black .main-sidebar .sidebar-menu {background-color: #5a3573;}',
            '.skin-black .main-sidebar .treeview{background-color: #5a3573;}',
            
-        
            '.skin-black .sidebar-menu>li>.treeview-menu {color: black; background-color: #45225c;}',
            
            '.skin-black .sidebar-menu>li:hover>a {color: black; background-color: white;}'
@@ -114,8 +111,8 @@ body <- dashboardBody(
               box(status='info', width=3,
                   radioButtons(inputId = 'chs_lyq', 
                                label = 'Please Choose:', 
-                               choices = c('Snapshot', 'Changes by time', '%Change by time'), 
-                               selected = 'Snapshot'
+                               choices = c('Specific year', 'Changes by time', '%Change by time'), 
+                               selected = 'Specific year'
                   ),
                   selectInput(inputId = 'basic_metric_lyq', 
                               label = 'Category',
@@ -143,8 +140,8 @@ body <- dashboardBody(
               ),
               box(width = 3, status='info',
                   radioButtons(inputId = 'chs_xjx', label = 'Please Choose:', 
-                               choices = c('Snapshot', 'Changes by time', '%Change by time'), 
-                               selected = 'Snapshot'
+                               choices = c('Specific year', 'Changes by time', '%Change by time'), 
+                               selected = 'Specific year'
                   ),
                   selectInput(inputId = 'state_xjx', 
                               label = 'State',
